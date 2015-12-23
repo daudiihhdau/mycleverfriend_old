@@ -1,0 +1,11 @@
+{
+  "name": "ReadRssFeed",
+  "version": "0.0.0",
+  "description": "Fetch the subscribed RSS Feed.",
+  "main": "ReadRssFeed.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mathias Mielitz",
+  "license": "BSD-2-Clause"
+}
