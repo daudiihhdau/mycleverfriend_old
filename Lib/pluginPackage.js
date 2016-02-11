@@ -2,7 +2,7 @@
  * Created by daudiihhdau on 16.12.15.
  */
 
-module.exports = function()
+function PluginPackage()
 {
     var name;
     var description;
@@ -36,8 +36,15 @@ module.exports = function()
             return packageCollection.data;
         },
         /*fill: function (data) {
-            packageCollection.insert(data);
-            return this;
-        }*/
+         packageCollection.insert(data);
+         return this;
+         }*/
     }
-}();
+};
+
+function create(packageDefinition)
+{
+    return new PluginPackage().init(packageDefinition);
+};
+
+module.exports.create = create;

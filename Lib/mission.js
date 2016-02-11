@@ -8,7 +8,7 @@ var pluginProxy = require('./pluginProxy.js');
 _ = require('underscore');
 db = null;
 
-module.exports = function()
+function Mission()
 {
     var mission_version;
     var name;
@@ -21,7 +21,7 @@ module.exports = function()
 
     function createPluginProxies(pluginDefinitions) {
         _.each(pluginDefinitions, function(pluginDefinitionOn) {
-            plugins.push(pluginProxy.init(pluginDefinitionOn));
+            plugins.push(pluginProxy.create(pluginDefinitionOn));
         })
     }
 
@@ -63,4 +63,11 @@ module.exports = function()
             return plugins;
         }
     }
-}();
+}
+
+function create(missionDefinition)
+{
+    return new Mission().init(missionDefinition);
+}
+
+module.exports.create = create;

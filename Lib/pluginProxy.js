@@ -6,7 +6,7 @@
 
 var pluginPackage = require('./pluginPackage.js');
 
-module.exports = function ()
+function PluginProxy()
 {
     var id;
     var name;
@@ -17,20 +17,22 @@ module.exports = function ()
         var test = resolveIsModuleAvailable(getPluginPath());
         console.log("module available " + test)
 
-        // todo: downloade, installiere richtiges plugin
         // todo: lade richtiges plugin
+        // todo: downloade, installiere richtiges plugin
     }
 
     function getPluginPath() {
+        // todo: 
         return './../Plugins/Web/' + name + '/plugin.js';
     }
 
     function createPackages(pluginDefinition, callback) {
 
-        var feedPlugin = require('./../Plugins/Web/ReadRssFeed/plugin.js');
+        var pluginModule = require(getPluginPath());
 
-        _.each(feedPlugin.packageDefinitions, function(packageDefinitionOn) {
-            packages.push(pluginPackage.init(packageDefinitionOn));
+        _.each(pluginModule.packageDefinitions, function(packageDefinitionOn) {
+            var newPackage = pluginPackage.create(packageDefinitionOn);
+            packages.push(newPackage);
         });
 
         callback(null, packages);
@@ -55,7 +57,7 @@ module.exports = function ()
             version = pluginDefinition.version;
 
             loadPlugin();
-            createPackages(pluginDefinition, function(err, data) {});
+            createPackages(pluginDefinition, function(err, data) { });
             return this;
         },
         getId: function() {
@@ -90,4 +92,11 @@ module.exports = function ()
             return this;
         }
     }
-}();
+};
+
+function create(pluginDefinition)
+{
+    return new PluginProxy().init(pluginDefinition);
+}
+
+module.exports.create = create;

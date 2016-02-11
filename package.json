@@ -2,7 +2,7 @@
   "name": "mycleverfriend",
   "version": "0.0.0",
   "description": "Working with plugins the smart way!",
-  "main": "index.js",
+  "main": "mission.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

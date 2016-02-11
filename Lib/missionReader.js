@@ -5,7 +5,7 @@
 fs = require('fs');
 mission = require('./mission.js');
 
-module.exports = function(filepath, callback)
+function readMissionFile(filepath, callback)
 {
     var filepath = filepath;
 
@@ -16,8 +16,10 @@ module.exports = function(filepath, callback)
         missionObj = JSON.parse(data);
         //todo: json validieren
 
-        var m = mission.init(missionObj);
-
-        callback(null, m);
+        callback(null, mission.create(missionObj));
     })
+}
+
+module.exports = {
+    load: readMissionFile,
 }
