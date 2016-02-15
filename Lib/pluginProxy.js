@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Created by daudiihhdau on 16.12.15.
  */
@@ -19,7 +21,6 @@ function PluginProxy()
         console.log("module available " + test);
 
         pluginModule = require(getPluginPath());
-        console.log(pluginModule);
 
         // create packages
         _.each(pluginModule.packageDefinitions, function(packageDefinitionOn) {
@@ -50,7 +51,7 @@ function PluginProxy()
         if (!direction) throw "Missing package direction";
 
         var foundPackages = [];
-        for (i=0; i<packages.length; i++) {
+        for (var i=0; i<packages.length; i++) {
             if (packages[i].getDirection() === direction) foundPackages.push(packages[i]);
         }
         return foundPackages;
@@ -60,7 +61,7 @@ function PluginProxy()
 
         if (!name) throw "Missing package name";
 
-        for (i=0; i<packages.length; i++) {
+        for (var i=0; i<packages.length; i++) {
             if (packages[i].getName() === name) return packages[i];
         }
         return null;
@@ -105,7 +106,9 @@ function PluginProxy()
             return getPackages(direction);
         },
         start: function() {
-            pluginModule.work(this, function(err, data) { });
+            pluginModule.work(function(err, data) {
+                console.log(data);
+            });
             return this;
         },
         reset: function() {

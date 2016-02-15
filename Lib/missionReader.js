@@ -1,9 +1,11 @@
+"use strict";
+
 /**
  * Created by daudiihhdau on 16.12.15.
  */
 
-fs = require('fs');
-mission = require('./mission.js');
+var fs = require('fs');
+var mission = require('./mission.js');
 
 function readMissionFile(filepath, callback)
 {
@@ -13,7 +15,7 @@ function readMissionFile(filepath, callback)
 
         if (err) return callback(new Error(err));
 
-        missionObj = JSON.parse(data);
+        var missionObj = JSON.parse(data);
         //todo: json validieren
 
         callback(null, mission.create(missionObj));

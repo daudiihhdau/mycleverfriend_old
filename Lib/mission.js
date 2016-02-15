@@ -2,12 +2,11 @@
  * Created by daudiihhdau on 16.12.15.
  */
 
+async = require('async');
 _ = require('underscore');
 var lokijs = require('lokijs');
 db = new lokijs('MyCleverFriend');
 var pluginProxy = require('./pluginProxy.js');
-
-
 
 function Mission()
 {

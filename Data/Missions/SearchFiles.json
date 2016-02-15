@@ -14,15 +14,11 @@
     "input": [{
         "name": "Paths",
         "items": [{
-            "path": "/home/daudiihhdau/Dokumente",
-            "ignoreSubDirectories": true
+            "path": "/home/daudiihhdau/Dokumente"
+          },
+          {
+            "path": "/home/daudiihhdau/Dokumente/inpro"
           }]
-      },
-      {
-        "name": "FileSettings",
-        "items": [{
-          "extension": "txt"
-        }]
       }]
   }]
 }

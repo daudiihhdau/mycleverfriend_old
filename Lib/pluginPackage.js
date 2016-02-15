@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Created by daudiihhdau on 16.12.15.
  */
@@ -36,7 +38,9 @@ function PluginPackage()
             return packageCollection.data;
         },
         fill: function (data) {
-            packageCollection.insert(data.items[0]);
+            _.each(data.items, function(itemOn) {
+                packageCollection.insert(itemOn);
+            });
             return this;
         }
     }
