@@ -36,7 +36,7 @@ function PluginPackage()
             return packageCollection.data;
         },
         fill: function (data) {
-            packageCollection.insert(data.rows[0]);
+            packageCollection.insert(data.items[0]);
             return this;
         }
     }

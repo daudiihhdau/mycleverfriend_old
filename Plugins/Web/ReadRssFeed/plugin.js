@@ -27,9 +27,9 @@ var rssOutputPackage = {
 };
 
 
-exports.packageDefinitions = [urlInfoPackage, rssOutputPackage];
+module.exports.packageDefinitions = [urlInfoPackage, rssOutputPackage];
 
-exports.work = function() {
+module.exports.work = function() {
 
     /*DataTableReader baseDirectories = this.GetDataReader(typeof(BaseDirectories));
     while (baseDirectories.Read())

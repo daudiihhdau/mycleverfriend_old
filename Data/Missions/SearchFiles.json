@@ -1,0 +1,28 @@
+{
+  "mission_version": 1,
+  "specification": {
+    "name": "Search Images in Directories",
+    "version": "1.0.0.0",
+    "author": "Mathias Mielitz",
+    "description": "Get all images of the given directories.",
+    "tags": ["images"]
+  },
+  "plugins": [{
+    "id": 0,
+    "name": "SearchFiles",
+    "version": "1.0.0.0",
+    "input": [{
+        "name": "Paths",
+        "items": [{
+            "path": "/home/daudiihhdau/Dokumente",
+            "ignoreSubDirectories": true
+          }]
+      },
+      {
+        "name": "FileSettings",
+        "items": [{
+          "extension": "txt"
+        }]
+      }]
+  }]
+}

@@ -19,6 +19,7 @@ function PluginProxy()
         console.log("module available " + test);
 
         pluginModule = require(getPluginPath());
+        console.log(pluginModule);
 
         // create packages
         _.each(pluginModule.packageDefinitions, function(packageDefinitionOn) {
@@ -32,7 +33,7 @@ function PluginProxy()
 
     function getPluginPath() {
         // todo: 
-        return './../Plugins/Web/' + name + '/plugin.js';
+        return './../Plugins/IO/' + name + '/plugin.js';
     }
 
 
@@ -83,11 +84,6 @@ function PluginProxy()
                 packageOn.fill(inputDataOn);
             });
 
-            /*_.each(packageRows, function(packageRowOn) {
-             var newPackage = pluginPackatge.create(packageDefinitionOn);
-             packages.push(newPackage);
-             });*/
-
             return this;
         },
         getId: function() {
@@ -109,7 +105,7 @@ function PluginProxy()
             return getPackages(direction);
         },
         start: function() {
-            console.log(JSON.stringify(getPackages("Input")));
+            pluginModule.work(this, function(err, data) { });
             return this;
         },
         reset: function() {

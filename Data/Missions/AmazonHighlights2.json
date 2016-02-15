@@ -13,7 +13,7 @@
     "version": "1.0.0.1",
     "input": [{
         "name": "URLInfo",
-        "rows": [{
+        "items": [{
             "num_feed_items": 20,
             "url": "http://www.amazon.de/rss/bestsellers/dvd-de/ref=pd_ts_rss_link"
           }]
