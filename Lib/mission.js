@@ -2,11 +2,12 @@
  * Created by daudiihhdau on 16.12.15.
  */
 
+_ = require('underscore');
 var lokijs = require('lokijs');
+db = new lokijs('MyCleverFriend');
 var pluginProxy = require('./pluginProxy.js');
 
-_ = require('underscore');
-db = null;
+
 
 function Mission()
 {
@@ -16,12 +17,12 @@ function Mission()
     var author;
     var description;
     var tags;
-    var plugins = [];
+    var pluginProxies = [];
 
 
     function createPluginProxies(pluginDefinitions) {
         _.each(pluginDefinitions, function(pluginDefinitionOn) {
-            plugins.push(pluginProxy.create(pluginDefinitionOn));
+            pluginProxies.push(pluginProxy.create(pluginDefinitionOn));
         })
     }
 
@@ -31,8 +32,6 @@ function Mission()
             // mit den Default-Optionen
             //_opts = $.extend(_defaults, options);
 
-            db = new lokijs(name);
-
             mission_version = missionDefinition.mission_version;
             name = missionDefinition.specification.name;
             version = missionDefinition.specification.version;
@@ -40,8 +39,9 @@ function Mission()
             description = missionDefinition.specification.description;
             tags = missionDefinition.specification.tags;
 
-            plugins = [];
+            pluginProxies = [];
             createPluginProxies(missionDefinition.plugins);
+
             return this;
         },
         getName: function () {
@@ -60,7 +60,19 @@ function Mission()
             return tags;
         },
         getPlugins: function () {
-            return plugins;
+            return pluginProxies;
+        },
+        start : function () {
+
+            console.log("Trying to start the mission.");
+
+            _.each(pluginProxies, function(pluginProxyOn) {
+
+                console.log("starte plugin " + pluginProxyOn.getName() + "from: " + pluginProxyOn.getPath());
+
+                pluginProxyOn.start();
+
+            })
         }
     }
 }

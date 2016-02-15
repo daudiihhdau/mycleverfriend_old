@@ -35,10 +35,10 @@ function PluginPackage()
         getItems: function () {
             return packageCollection.data;
         },
-        /*fill: function (data) {
-         packageCollection.insert(data);
-         return this;
-         }*/
+        fill: function (data) {
+            packageCollection.insert(data.rows[0]);
+            return this;
+        }
     }
 };
 

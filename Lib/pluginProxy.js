@@ -11,11 +11,20 @@ function PluginProxy()
     var id;
     var name;
     var version;
+    var pluginModule;
     var packages = [];
 
     function loadPlugin() {
         var test = resolveIsModuleAvailable(getPluginPath());
-        console.log("module available " + test)
+        console.log("module available " + test);
+
+        pluginModule = require(getPluginPath());
+
+        // create packages
+        _.each(pluginModule.packageDefinitions, function(packageDefinitionOn) {
+            var newPackage = pluginPackage.create(packageDefinitionOn);
+            packages.push(newPackage);
+        });
 
         // todo: lade richtiges plugin
         // todo: downloade, installiere richtiges plugin
@@ -26,17 +35,6 @@ function PluginProxy()
         return './../Plugins/Web/' + name + '/plugin.js';
     }
 
-    function createPackages(pluginDefinition, callback) {
-
-        var pluginModule = require(getPluginPath());
-
-        _.each(pluginModule.packageDefinitions, function(packageDefinitionOn) {
-            var newPackage = pluginPackage.create(packageDefinitionOn);
-            packages.push(newPackage);
-        });
-
-        callback(null, packages);
-    }
 
     function resolveIsModuleAvailable(name) {
         try {
@@ -44,6 +42,27 @@ function PluginProxy()
         } catch( e ) {
             return false
         }
+    }
+
+    function getPackages(direction) {
+
+        if (!direction) throw "Missing package direction";
+
+        var foundPackages = [];
+        for (i=0; i<packages.length; i++) {
+            if (packages[i].getDirection() === direction) foundPackages.push(packages[i]);
+        }
+        return foundPackages;
+    }
+
+    function getPackageByName(name) {
+
+        if (!name) throw "Missing package name";
+
+        for (i=0; i<packages.length; i++) {
+            if (packages[i].getName() === name) return packages[i];
+        }
+        return null;
     }
 
     return {
@@ -57,7 +76,18 @@ function PluginProxy()
             version = pluginDefinition.version;
 
             loadPlugin();
-            createPackages(pluginDefinition, function(err, data) { });
+
+            // fill packages
+            _.each(pluginDefinition.input, function(inputDataOn) {
+                var packageOn = getPackageByName(inputDataOn.name);
+                packageOn.fill(inputDataOn);
+            });
+
+            /*_.each(packageRows, function(packageRowOn) {
+             var newPackage = pluginPackatge.create(packageDefinitionOn);
+             packages.push(newPackage);
+             });*/
+
             return this;
         },
         getId: function() {
@@ -73,19 +103,13 @@ function PluginProxy()
             return getPluginPath();
         },
         getPackageByName: function(name) {
-            for (i=0; i<packages.length; i++) {
-                if (packages[i].getName() === name) return packages[i];
-            }
-            return null;
+            return getPackageByName(name);
         },
         getPackages: function(direction) {
-            var foundPackages = [];
-            for (i=0; i<packages.length; i++) {
-                if (packages[i].getDirection() === direction) foundPackages.push(packages[i]);
-            }
-            return foundPackages;
+            return getPackages(direction);
         },
         start: function() {
+            console.log(JSON.stringify(getPackages("Input")));
             return this;
         },
         reset: function() {

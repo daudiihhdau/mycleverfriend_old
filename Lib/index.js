@@ -12,7 +12,10 @@ function load(filePath)
 
         console.log(mission.getTags());
         console.log(mission.getPlugins()[0].getPackages("Input")[0].getName());
-        console.log(mission.getPlugins()[0].getPackages("Output")[0].getDescription());
+        console.log(mission.getPlugins()[0].getPackages("Input")[0].getItems());
+        console.log(mission.getPlugins()[0].getPackages("Output")[0].getName());
+
+        mission.start();
     });
 }
 

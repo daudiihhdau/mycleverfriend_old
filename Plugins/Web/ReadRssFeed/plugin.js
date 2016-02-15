@@ -31,4 +31,20 @@ exports.packageDefinitions = [urlInfoPackage, rssOutputPackage];
 
 exports.work = function() {
 
+    /*DataTableReader baseDirectories = this.GetDataReader(typeof(BaseDirectories));
+    while (baseDirectories.Read())
+    {
+        string basePath = baseDirectories[BaseDirectories.PathName.ToString()].ToString();
+        this.AddNewLoggingMessage(typeof(BaseDirectories), String.Format("go to base directory:{0}", basePath));
+
+        DataTableReader newDirectories = this.GetDataReader(typeof(NewDirectories));
+        while (newDirectories.Read())
+        {
+            this.AddNewLoggingMessage(typeof(NewDirectories), String.Format("create new directory:{0}", newDirectories[NewDirectories.DirectoryName.ToString()].ToString()));
+
+            Directory.CreateDirectory(basePath + "\\" + newDirectories[NewDirectories.DirectoryName.ToString()].ToString());
+        }
+    }*/
+
+
 }
