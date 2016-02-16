@@ -34,7 +34,8 @@ function PluginProxy()
 
     function getPluginPath() {
         // todo: 
-        return './../Plugins/IO/' + name + '/plugin.js';
+        return './../Plugins/Web/' + name + '/plugin.js';
+        //return './../Plugins/IO/' + name + '/plugin.js';
     }
 
 
@@ -105,10 +106,8 @@ function PluginProxy()
         getPackages: function(direction) {
             return getPackages(direction);
         },
-        start: function() {
-            pluginModule.work(function(err, data) {
-                console.log(data);
-            });
+        start: function(callback) {
+            pluginModule.work(callback);
             return this;
         },
         reset: function() {

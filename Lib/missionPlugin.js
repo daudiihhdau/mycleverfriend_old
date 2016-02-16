@@ -1,14 +1,23 @@
 "use strict";
 
-function getItems(packageObj) {
-
+function getCollection(packageObj) {
     if (!packageObj) throw "invalid package!";
 
     var collectionOn = db.getCollection(packageObj.name);
     if (!collectionOn) throw "invalid package!";
 
-    return collectionOn.chain().data();
+    return collectionOn;
+}
+
+function getItems(packageObj) {
+
+    return getCollection(packageObj).chain().data();
+}
+
+function addItem(packageObj, item) {
+    getCollection(packageObj).insert(item);
 }
 
 
 module.exports.getItems = getItems;
+module.exports.addItem = addItem;

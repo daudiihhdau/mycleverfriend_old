@@ -35,7 +35,7 @@ function PluginPackage()
             return description;
         },
         getItems: function () {
-            return packageCollection.data;
+            return packageCollection.chain().data();
         },
         fill: function (data) {
             _.each(data.items, function(itemOn) {

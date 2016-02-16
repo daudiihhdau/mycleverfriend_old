@@ -16,6 +16,14 @@
         "items": [{
             "num_feed_items": 20,
             "url": "http://www.amazon.de/rss/bestsellers/dvd-de/ref=pd_ts_rss_link"
+          },
+          {
+            "num_feed_items": 20,
+            "url": "http://www.spiegel.de/schlagzeilen/index.rss"
+          },
+          {
+            "num_feed_items": 20,
+            "url": "http://newsfeed.zeit.de/index"
           }]
     }]
   }]

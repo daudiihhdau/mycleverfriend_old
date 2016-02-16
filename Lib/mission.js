@@ -61,17 +61,14 @@ function Mission()
         getPlugins: function () {
             return pluginProxies;
         },
-        start : function () {
+        start : function (callback) {
 
             console.log("Trying to start the mission.");
 
             _.each(pluginProxies, function(pluginProxyOn) {
-
                 console.log("starte plugin " + pluginProxyOn.getName() + "from: " + pluginProxyOn.getPath());
-
-                pluginProxyOn.start();
-
-            })
+                pluginProxyOn.start(callback);
+            });
         }
     }
 }
