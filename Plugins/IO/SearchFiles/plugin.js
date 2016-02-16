@@ -23,13 +23,10 @@ var foundFilesPackage = {
 
 module.exports.packageDefinitions = [pathsPackage, foundFilesPackage];
 
-
 module.exports.work = function(callback) {
+    async.map(missionPlugin.getItems(pathsPackage), getFiles, callback);
+}
 
-    async.waterfall([
-        function(callback) {
-            missionPlugin.getNextItem(pathsPackage, callback); },
-        function(item, callback) {
-            fs.readdir(item.path, callback); }
-    ], callback);
+function getFiles(itemOn, callback) {
+    fs.readdir(itemOn.path, callback);
 }
