@@ -11,7 +11,7 @@ function getCollection(packageObj) {
 
 function getItems(packageObj) {
 
-    return getCollection(packageObj).chain().data();
+    return getCollection(packageObj).data;
 }
 
 function addItem(packageObj, item) {

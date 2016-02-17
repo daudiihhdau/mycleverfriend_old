@@ -25,6 +25,8 @@ function PluginProxy()
         // create packages
         _.each(pluginModule.packageDefinitions, function(packageDefinitionOn) {
             var newPackage = pluginPackage.create(packageDefinitionOn);
+            // todo
+            // als assoziatives array! udn getPackageByName wegschmeißen!
             packages.push(newPackage);
         });
 
@@ -81,9 +83,9 @@ function PluginProxy()
             loadPlugin();
 
             // fill packages
-            _.each(pluginDefinition.input, function(inputDataOn) {
-                var packageOn = getPackageByName(inputDataOn.name);
-                packageOn.fill(inputDataOn);
+            _.each(pluginDefinition.input, function(inputDataOn, inputNameOn) {
+                var packageOn = getPackageByName(inputNameOn);
+                packageOn.addDocuments(inputDataOn);
             });
 
             return this;

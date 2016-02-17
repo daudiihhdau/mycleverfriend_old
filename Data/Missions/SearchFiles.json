@@ -13,7 +13,7 @@
     "version": "1.0.0.0",
     "input": [{
         "name": "Paths",
-        "items": [{
+        "documents": [{
             "path": "/home/daudiihhdau/Dokumente"
           },
           {
