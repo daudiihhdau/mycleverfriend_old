@@ -14,9 +14,9 @@ function PluginProxy()
     var name;
     var version;
     var pluginModule;
-    var packages = [];
+    var packages = {};
 
-    function loadPlugin() {
+    function loadPlugin(callback) {
         var test = resolveIsModuleAvailable(getPluginPath());
         console.log("module available " + test);
 
@@ -24,11 +24,10 @@ function PluginProxy()
 
         // create packages
         _.each(pluginModule.packageDefinitions, function(packageDefinitionOn) {
-            var newPackage = pluginPackage.create(packageDefinitionOn);
-            // todo
-            // als assoziatives array! udn getPackageByName wegschmeißen!
-            packages.push(newPackage);
+            packages[packageDefinitionOn.name.toLowerCase()] = pluginPackage.create(packageDefinitionOn);
         });
+
+        callback(null);
 
         // todo: lade richtiges plugin
         // todo: downloade, installiere richtiges plugin
@@ -51,43 +50,30 @@ function PluginProxy()
 
     function getPackages(direction) {
 
-        if (!direction) throw "Missing package direction";
+        if (!direction) throw Error("Missing package direction");
 
         var foundPackages = [];
-        for (var i=0; i<packages.length; i++) {
-            if (packages[i].getDirection() === direction) foundPackages.push(packages[i]);
-        }
+        _.each(packages, function(inputDataOn, inputPackageNameOn) {
+            if (packages[inputPackageNameOn].getDirection() == direction) foundPackages.push(packages[inputPackageNameOn]);
+        });
         return foundPackages;
     }
 
-    function getPackageByName(name) {
-
-        if (!name) throw "Missing package name";
-
-        for (var i=0; i<packages.length; i++) {
-            if (packages[i].getName() === name) return packages[i];
-        }
-        return null;
-    }
-
     return {
-        init: function(pluginDefinition) { //(options){
-            // jQuery Methode zum Mischen der Benutzer-
-            // mit den Default-Optionen
-            //_opts = $.extend(_defaults, options);
+        init: function(pluginDefinition) {
 
             id = pluginDefinition.id;
             name = pluginDefinition.name;
             version = pluginDefinition.version;
 
-            loadPlugin();
+            loadPlugin(function(err) {
+                if (err) throw err;
 
-            // fill packages
-            _.each(pluginDefinition.input, function(inputDataOn, inputNameOn) {
-                var packageOn = getPackageByName(inputNameOn);
-                packageOn.addDocuments(inputDataOn);
+                // fill packages
+                _.each(pluginDefinition.input, function(inputDataOn, inputPackageNameOn) {
+                    packages[inputPackageNameOn.toLowerCase()].addDocuments(inputDataOn);
+                });
             });
-
             return this;
         },
         getId: function() {
@@ -101,9 +87,6 @@ function PluginProxy()
         },
         getPath: function() {
             return getPluginPath();
-        },
-        getPackageByName: function(name) {
-            return getPackageByName(name);
         },
         getPackages: function(direction) {
             return getPackages(direction);

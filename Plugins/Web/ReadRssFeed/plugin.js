@@ -30,7 +30,6 @@ var rssOutputPackage = {
     }
 };
 
-
 module.exports.packageDefinitions = [urlInfoPackage, rssOutputPackage];
 
 module.exports.work = function(callback) {

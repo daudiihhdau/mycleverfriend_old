@@ -14,7 +14,7 @@
     "input": {
       "URLInfo": [{
         "numfeeditems": 20,
-        "url": "http://www.amazon.de/rss/bestsellers/dvd-de/ref=pd_ts_rss_link"
+        "url": "http://www.spiegel.de/schlagzeilen/index.rss"
       }]
     }
   }]

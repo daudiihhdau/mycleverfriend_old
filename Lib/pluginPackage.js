@@ -12,7 +12,7 @@ function PluginPackage()
     var description;
     var direction;
     var packageCollection;
-    var properties = [];
+    var properties = {};
 
     function getInvalidItemNames(document) {
         return _.difference(_.keys(document), _.keys(properties));
@@ -25,7 +25,7 @@ function PluginPackage()
     }
 
     return {
-        init: function (packageDefinition) { //(options){
+        init: function (packageDefinition) {
 
             name = packageDefinition.name;
             direction = packageDefinition.direction;
