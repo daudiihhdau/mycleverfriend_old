@@ -14,14 +14,17 @@ function PluginPackage()
     var packageCollection;
     var properties = {};
 
-    function getInvalidItemNames(document) {
-        return _.difference(_.keys(document), _.keys(properties));
-    }
-
     function addDocument(document) {
-        // delete all invalid items
-        var cleanedDocument = _.omit(document, getInvalidItemNames(document));
-        packageCollection.insert(cleanedDocument);
+        // ignore invalid elements
+        var cleanedDocument = _.pick(document, _.keys(properties));
+        console.log(cleanedDocument);
+
+        // ignore all elements with missing elements
+        if (_.size(cleanedDocument) == _.size(properties)) {
+            packageCollection.insert(cleanedDocument);
+        }
+
+        // todo: write to error log
     }
 
     return {

@@ -33,8 +33,8 @@ var rssOutputPackage = {
 module.exports.packageDefinitions = [urlInfoPackage, rssOutputPackage];
 
 module.exports.work = function(callback) {
-    async.map(missionPlugin.getItems(urlInfoPackage), readFeed, callback);
 
+    async.map(missionPlugin.getItems(urlInfoPackage), readFeed, callback);
 
     function callbackTest(err, item, articles) {
         if (err) throw err;
