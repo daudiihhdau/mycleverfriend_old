@@ -5,6 +5,7 @@
  */
 
 var packageProperty = require('./packageProperty.js');
+var missionPlugin = require('./missionPlugin.js')
 
 function PluginPackage()
 {
@@ -17,7 +18,6 @@ function PluginPackage()
     function addDocument(document) {
         // ignore invalid elements
         var cleanedDocument = _.pick(document, _.keys(properties));
-        console.log(cleanedDocument);
 
         // ignore all elements with missing elements
         if (_.size(cleanedDocument) == _.size(properties)) {

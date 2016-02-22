@@ -8,6 +8,9 @@ var lokijs = require('lokijs');
 db = new lokijs('MyCleverFriend');
 var pluginProxy = require('./pluginProxy.js');
 
+// todo: use dependency injection for the database
+//https://blog.risingstack.com/fundamental-node-js-design-patterns/
+//https://blog.risingstack.com/dependency-injection-in-node-js/
 function Mission()
 {
     var mission_version;

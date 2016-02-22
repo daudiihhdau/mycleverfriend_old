@@ -49,7 +49,7 @@ module.exports.work = function(callback) {
             if (err) throw err;
 
             callbackTest(null, itemOn, articles);
-            callback();
+            return callback();
         });
     }
 }

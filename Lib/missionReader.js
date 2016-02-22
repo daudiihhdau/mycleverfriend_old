@@ -18,7 +18,7 @@ function readMissionFile(filepath, callback)
         var missionObj = JSON.parse(data);
         //todo: json validieren
 
-        callback(null, mission.create(missionObj));
+        return callback(null, mission.create(missionObj));
     })
 }
 

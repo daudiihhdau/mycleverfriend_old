@@ -92,6 +92,7 @@ function PluginProxy()
             return getPackages(direction);
         },
         start: function(callback) {
+            // todo: use dependency injection here
             pluginModule.work(callback);
             return this;
         },
