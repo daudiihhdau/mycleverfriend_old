@@ -5,7 +5,6 @@
  */
 
 var packageProperty = require('./packageProperty.js');
-var missionPlugin = require('./missionPlugin.js')
 
 function PluginPackage()
 {
@@ -16,12 +15,19 @@ function PluginPackage()
     var properties = {};
 
     function addDocument(document) {
+
+        // set lowerCase to every key
+        var lowerCaseDocument = {};
+        _.each(document, function(value, key) {
+            lowerCaseDocument[key.toLowerCase()] = value;
+        });
+
         // ignore invalid elements
-        var cleanedDocument = _.pick(document, _.keys(properties));
+        var cleanedLowerCaseDocument = _.pick(lowerCaseDocument, _.keys(properties));
 
         // ignore all elements with missing elements
-        if (_.size(cleanedDocument) == _.size(properties)) {
-            packageCollection.insert(cleanedDocument);
+        if (_.size(cleanedLowerCaseDocument) == _.size(properties)) {
+            packageCollection.insert(cleanedLowerCaseDocument);
         }
 
         // todo: write to error log
@@ -50,7 +56,7 @@ function PluginPackage()
             return name;
         },
         getDirection: function () {
-            return direction;
+            return direction.toLocaleLowerCase();
         },
         getDescription: function () {
             return description;

@@ -18,7 +18,7 @@ function load(filePath)
         mission.start(function (err) {
             if (err) throw err;
 
-            console.log(mission.getPlugins()[0].getPackages("Output")[0].getDocuments());
+            console.log(mission.getPlugins()[0].getPackages("Out")[0].getDocuments());
         });
     });
 }

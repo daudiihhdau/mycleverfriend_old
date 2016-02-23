@@ -3,7 +3,6 @@
 /**
  * Created by daudiihhdau on 17.12.15.
  */
-var missionPlugin = require('../../../Lib/missionPlugin.js')
 var fs = require('fs');
 var path = require('path');
 

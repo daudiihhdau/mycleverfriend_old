@@ -6,7 +6,8 @@
 // http://robertnyman.com/2008/10/14/javascript-how-to-get-private-privileged-public-and-static-members-properties-and-methods/
 // http://robertnyman.com/2008/10/09/explaining-javascript-scope-and-closures/
 
-var pluginPackage = require('./pluginPackage.js');
+
+var packageCollector = require('./packageCollector.js');
 
 function PluginProxy()
 {
@@ -14,18 +15,15 @@ function PluginProxy()
     var name;
     var version;
     var pluginModule;
-    var packages = {};
+    var packageCollection;
 
     function loadPlugin(callback) {
         var test = resolveIsModuleAvailable(getPluginPath());
         console.log("module available " + test);
 
+        console.log("load plugin");
         pluginModule = require(getPluginPath());
-
-        // create packages
-        _.each(pluginModule.packageDefinitions, function(packageDefinitionOn) {
-            packages[packageDefinitionOn.name.toLowerCase()] = pluginPackage.create(packageDefinitionOn);
-        });
+        packageCollection = packageCollector.create(pluginModule.packageDefinitions);
 
         callback(null);
 
@@ -48,30 +46,18 @@ function PluginProxy()
         }
     }
 
-    function getPackages(direction) {
-
-        if (!direction) throw Error("Missing package direction");
-
-        var foundPackages = [];
-        _.each(packages, function(inputDataOn, inputPackageNameOn) {
-            if (packages[inputPackageNameOn].getDirection() == direction) foundPackages.push(packages[inputPackageNameOn]);
-        });
-        return foundPackages;
-    }
-
     return {
-        init: function(pluginDefinition) {
+        init: function(missionObjPlugin) {
 
-            id = pluginDefinition.id;
-            name = pluginDefinition.name;
-            version = pluginDefinition.version;
+            id = missionObjPlugin.id;
+            name = missionObjPlugin.name;
+            version = missionObjPlugin.version;
 
             loadPlugin(function(err) {
                 if (err) throw err;
 
-                // fill packages
-                _.each(pluginDefinition.input, function(inputDataOn, inputPackageNameOn) {
-                    packages[inputPackageNameOn.toLowerCase()].addDocuments(inputDataOn);
+                _.each(missionObjPlugin.input, function(missionObjPluginInput, packageNameOn) {
+                    packageCollection.add(packageNameOn, missionObjPluginInput);
                 });
             });
             return this;
@@ -89,11 +75,10 @@ function PluginProxy()
             return getPluginPath();
         },
         getPackages: function(direction) {
-            return getPackages(direction);
+            return packageCollection.getByDirection(direction);
         },
         start: function(callback) {
-            // todo: use dependency injection here
-            pluginModule.work(callback);
+            pluginModule.work(packageCollection, callback);
             return this;
         },
         reset: function() {
@@ -102,9 +87,9 @@ function PluginProxy()
     }
 };
 
-function create(pluginDefinition)
+function create(missionObjPlugin)
 {
-    return new PluginProxy().init(pluginDefinition);
+    return new PluginProxy().init(missionObjPlugin);
 }
 
 module.exports.create = create;

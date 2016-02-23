@@ -21,28 +21,20 @@ function Mission()
     var tags;
     var pluginProxies = [];
 
-
-    function createPluginProxies(pluginDefinitions) {
-        _.each(pluginDefinitions, function(pluginDefinitionOn) {
-            pluginProxies.push(pluginProxy.create(pluginDefinitionOn));
-        })
-    }
-
     return {
-        init: function (missionDefinition) { //(options){
-            // jQuery Methode zum Mischen der Benutzer-
-            // mit den Default-Optionen
-            //_opts = $.extend(_defaults, options);
+        init: function (missionObj) {
 
-            mission_version = missionDefinition.mission_version;
-            name = missionDefinition.specification.name;
-            version = missionDefinition.specification.version;
-            author = missionDefinition.specification.author;
-            description = missionDefinition.specification.description;
-            tags = missionDefinition.specification.tags;
+            mission_version = missionObj.mission_version;
+            name = missionObj.specification.name;
+            version = missionObj.specification.version;
+            author = missionObj.specification.author;
+            description = missionObj.specification.description;
+            tags = missionObj.specification.tags;
 
             pluginProxies = [];
-            createPluginProxies(missionDefinition.plugins);
+            _.each(missionObj.plugins, function(missionObjPluginOn) {
+                pluginProxies.push(pluginProxy.create(missionObjPluginOn));
+            })
 
             return this;
         },
@@ -76,9 +68,9 @@ function Mission()
     }
 }
 
-function create(missionDefinition)
+function create(missionObj)
 {
-    return new Mission().init(missionDefinition);
+    return new Mission().init(missionObj);
 }
 
 module.exports.create = create;
