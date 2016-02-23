@@ -6,7 +6,7 @@
 var feedReader = require("feed-read");
 
 module.exports.packageDefinitions = {
-    "URLInfo": {
+    urlInfo: {
         direction: "In",
         description: "Defines the rss-feeds you like to subscribe for.",
         properties: {
@@ -14,7 +14,7 @@ module.exports.packageDefinitions = {
             url:          { type: "url",        description: "URL where you get the rss-feed from." }
         }
     },
-    "RSSOutput": {
+    rssOutput: {
         direction: "Out",
         description: "Defines the content of the expected rss-feeds.",
         properties: {
@@ -29,31 +29,13 @@ module.exports.packageDefinitions = {
 
 module.exports.work = function(packages, callback) {
 
-    /*
-    // dreamworld: get all documents
-    async.map(, readFeed, callback);
-    // dreamworld: add new document
-    newRow = packages.getTemplate("URLInfo");
-    // dreamworld: add new document
-    packages.add("RSSOutput", newRow);
-    */
-
-    //async.map(missionPlugin.getItems(urlInfoPackage), readFeed, callback);
-    async.map(packages.get("URLInfo"), readFeed, callback);
-
-    function saveArticles(err, item, articles) {
-        if (err) throw err;
-
-        _.each(articles, function(articleOn) {
-            packages.add("RSSOutput", articleOn);
-        });
-    }
+    async.map(packages.get("urlInfo"), readFeed, callback);
 
     function readFeed(itemOn, callback) {
         feedReader(itemOn.url, function (err, articles) {
             if (err) throw err;
 
-            saveArticles(null, itemOn, articles);
+            packages.add("rssOutput", articles);
             return callback();
         });
     }

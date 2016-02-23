@@ -11,14 +11,13 @@
     "id": 0,
     "name": "SearchFiles",
     "version": "1.0.0.0",
-    "input": [{
-        "name": "Paths",
-        "documents": [{
-            "path": "/home/daudiihhdau/Dokumente"
-          },
-          {
-            "path": "/home/daudiihhdau/Dokumente/inpro"
-          }]
-      }]
+    "input": {
+      "Paths": [{
+        "path": "/home/daudiihhdau/Dokumente"
+        },
+        {
+        "path": "/home/daudiihhdau/Dokumente/inpro"
+        }]
+    }
   }]
 }
