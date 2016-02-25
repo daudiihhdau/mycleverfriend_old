@@ -4,23 +4,9 @@
 
 var missionReader = require('./missionReader.js');
 
-function load(filePath)
+function load(filePath, callback)
 {
-    missionReader.load(filePath, function (err, mission)
-    {
-        if (err) throw err;
-
-        /*console.log(mission.getTags());
-        console.log(mission.getPlugins()[0].getPackages("Input")[0].getName());
-        console.log(mission.getPlugins()[0].getPackages("Input")[0].getItems());
-        console.log(mission.getPlugins()[0].getPackages("Output")[0].getName());*/
-
-        mission.start(function (err) {
-            if (err) throw err;
-
-            console.log(mission.getPlugins()[0].getPackages("Out")[0].getDocuments());
-        });
-    });
+    missionReader.load(filePath, callback)
 }
 
 module.exports = {
