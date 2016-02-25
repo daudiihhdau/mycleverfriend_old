@@ -32,9 +32,7 @@ function PluginProxy()
     }
 
     function getPluginPath() {
-        // todo: 
-        return './../Plugins/Web/' + name + '/plugin.js';
-        //return './../Plugins/IO/' + name + '/plugin.js';
+        return './../Plugins/' + name;
     }
 
 

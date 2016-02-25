@@ -1,8 +1,8 @@
 {
-  "name": "SearchFiles",
-  "version": "1.0.0.0",
-  "description": "Get all Files of the given directory.",
-  "main": "ReadRssFeed.js",
+  "name": "ReadRssFeed",
+  "version": "0.0.0",
+  "description": "Fetch the subscribed RSS Feed.",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

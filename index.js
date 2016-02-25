@@ -11,11 +11,12 @@ server.connection({
 
 server.route({
     method: 'GET',
-    path: '/',
+    path: '/{mission}',
     handler: function (request, reply) {
 
         //./Data/Missions/SearchFiles.json;
-        myCleverFriend.readMissionFile('./Data/Missions/AmazonHighlights2.json', function (err, mission) {
+        //./Data/Missions/AmazonHighlights2.json
+        myCleverFriend.readMissionFile('./Data/Missions/' + encodeURIComponent(request.params.mission), function (err, mission) {
             if (err) if (err) throw reply(err);
 
             /*console.log(mission.getTags());
