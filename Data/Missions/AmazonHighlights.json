@@ -11,54 +11,19 @@
     "id": 0,
     "name": "ReadRssFeed",
     "version": "1.0.0.1",
-    "input": [{
-        "name": "URLInfo",
-        "data": [{
-            "num_feed_items": 20,
-            "url": "http://www.amazon.de/rss/bestsellers/dvd-de/ref=pd_ts_rss_link"
-          }]
-    }]
-  },
-  {
-    "id": 1,
-    "name": "Extract",
-    "version": "1.0.0.1",
-    "input": [{
-        "name": "Data2Extract",
-        "data": [{
-          "title": { "from_plugin_id": 0, "from_package": "RSSOutput", "from_column": "title" },
-          "url": { "from_plugin_id": 0, "from_package": "RSSOutput", "from_column": "url" },
-          "text": { "from_plugin_id": 0, "from_package": "RSSOutput", "from_column": "text" }
-          }]
+    "input": {
+      "URLInfo": [{
+        "numFeedItems": 20,
+        "url": "http://www.spiegel.de/schlagzeilen/index.rss"
+      },
+        {
+          "numFeedItems": 20,
+          "url": "http://www.amazon.de/gp/rss/bestsellers/books/166024031/ref=zg_bs_166024031_rsslink"
         },
         {
-        "name": "ExtractRules",
-        "data": [{
-            "column_name": "title",
-            "validation": "Leonardo DiCaprio"
+          "numFeedItems": 20,
+          "url": "http://newsfeed.zeit.de/index"
         }]
-    }]
-  },
-  {
-    "id": 2,
-    "name": "WriteRssFeed",
-    "version": "1.0.0.1",
-    "input": [{
-        "name": "RSSFeedChannel",
-        "data": [{
-          "title": "Leonardo DiCaprio movies",
-          "link": "http://www.amazon.de",
-          "description": "All new Leonardo DiCaprio movies on Amazon.",
-          "filename": "/home/daudiihhdau/DiCaprio.rss"
-          }]
-      },
-      {
-        "name": "RSSFeedItem",
-        "data": [{
-          "title": { "from_plugin_id": 1, "from_package": "Extractedrows", "from_column": "Title" },
-          "link": { "from_plugin_id": 1, "from_package": "Extractedrows", "from_column": "Link" },
-          "description": { "from_plugin_id": 1, "from_package": "Extractedrows", "from_column": "Description" }
-        }]
-      }]
-    }]
+    }
+  }]
 }

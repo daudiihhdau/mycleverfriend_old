@@ -25,5 +25,17 @@
         "url": "http://newsfeed.zeit.de/index"
       }]
     }
+  },
+  {
+    "id": 1,
+    "name": "WriteRssFeed",
+    "version": "1.0.0.1",
+    "input": {
+      "FeedChannel": [{
+        "title": "I love data!",
+        "description": "Alles über Daten",
+        "link": "http://www.test.de"
+      }]
+    }
   }]
 }

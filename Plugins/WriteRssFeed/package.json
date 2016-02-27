@@ -1,0 +1,11 @@
+{
+  "name": "WriteRssFeed",
+  "version": "0.0.0",
+  "description": "Create a very new RSS feed using given data.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mathias Mielitz",
+  "license": "BSD-2-Clause"
+}

@@ -42,7 +42,7 @@ function PluginPackage()
 
             // create package properties
             _.each(packageDefinition.properties, function(propertyDefinitionOn, propertyName) {
-                properties[propertyName.toLowerCase()] = packageProperty.create(propertyDefinitionOn);;
+                properties[propertyName.toLowerCase()] = packageProperty.create(propertyDefinitionOn);
             });
 
             packageCollection = db.addCollection(name);
