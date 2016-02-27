@@ -17,12 +17,12 @@ function PluginProxy()
     var pluginModule;
     var packageCollection;
 
-    function setupPlugin(packagesInputObj, callback) {
+    function setupPlugin(missionObjPlugin, callback) {
         var test = resolveIsModuleAvailable(getPluginPath());
         //console.log('load plugin "' + name + '" using: "' + test);
 
         pluginModule = require(getPluginPath());
-        packageCollection = packageCollector.create(pluginModule.packageDefinitions, packagesInputObj);
+        packageCollection = packageCollector.create(pluginModule.packageDefinitions, missionObjPlugin);
 
         callback(null);
 
@@ -50,7 +50,7 @@ function PluginProxy()
             name = missionObjPlugin.name;
             version = missionObjPlugin.version;
 
-            setupPlugin(missionObjPlugin.input, function(err) {
+            setupPlugin(missionObjPlugin, function(err) {
                 if (err) throw err;
             });
             return this;

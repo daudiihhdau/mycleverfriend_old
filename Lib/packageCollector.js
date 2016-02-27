@@ -4,7 +4,7 @@
  * Created by daudiihhdau on 16.12.15.
  */
 
-var pluginPackage = require('./package.js');
+var pluginPackage = require('./pluginPackage.js');
 
 function PackageCollector()
 {
@@ -36,25 +36,26 @@ function PackageCollector()
     }
 
     return {
-        init: function (packageDefinitions, packagesInputObj) {
+        init: function (packageDefinitions, missionObjPlugin) {
 
             if (!packageDefinitions) throw Error("Missing package definitions.");
-            if (!packagesInputObj) throw Error("Missing plugin data.");
+            if (!missionObjPlugin) throw Error("Missing plugin data.");
 
             // create packages
             _.each(packageDefinitions, function(packageDefinitionOn, packageNameOn) {
                 packages[packageNameOn.toLowerCase()] = pluginPackage.create(packageDefinitionOn);
             });
 
-            _.each(packagesInputObj, function(packagesInputObjOn, packageNameOn) {
+            // prepare packages
+            _.each(missionObjPlugin.input, function(missionObjPluginOn, packageNameOn) {
 
-                if (true == _.has(packagesInputObjOn, "data")) {
-                    add(packageNameOn, packagesInputObjOn.data);
+                if (true == _.has(missionObjPluginOn, "data")) {
+                    add(packageNameOn, missionObjPluginOn.data);
                 }
 
-                if (true == _.has(packagesInputObjOn, "linked")) {
+                if (true == _.has(missionObjPluginOn, "linked")) {
                     console.log("LINKED");
-                    console.log(packagesInputObjOn.linked);
+                    console.log(missionObjPluginOn.linked);
                 }
             });
 
@@ -78,9 +79,9 @@ function PackageCollector()
     }
 };
 
-function create(packageDefinitions, packagesInputObj)
+function create(packageDefinitions, missionObjPlugin)
 {
-    return new PackageCollector().init(packageDefinitions, packagesInputObj);
+    return new PackageCollector().init(packageDefinitions, missionObjPlugin);
 };
 
 module.exports.create = create;
