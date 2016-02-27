@@ -12,12 +12,14 @@
     "name": "SearchFiles",
     "version": "1.0.0.0",
     "input": {
-      "Paths": [{
-        "path": "/home/daudiihhdau/Dokumente"
+      "Paths": {
+        "data": [{
+          "path": "/home/daudiihhdau/Dokumente"
         },
         {
-        "path": "/home/daudiihhdau/Dokumente/inpro"
+          "path": "/home/daudiihhdau/Dokumente/inpro"
         }]
+      }
     }
   }]
 }

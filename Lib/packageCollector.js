@@ -22,14 +22,40 @@ function PackageCollector()
         return foundPackages;
     }
 
+    function add(packageName, newDocument) {
+
+        if (!packageName) throw Error("Missing package definitions.");
+        packageName = packageName.toLowerCase();
+
+        if (true == Array.isArray(newDocument)) {
+            packages[packageName].addDocuments(newDocument);
+        }
+        else {
+            packages[packageName].addDocument(newDocument);
+        }
+    }
+
     return {
-        init: function (packageDefinitions) {
+        init: function (packageDefinitions, packagesInputObj) {
 
             if (!packageDefinitions) throw Error("Missing package definitions.");
+            if (!packagesInputObj) throw Error("Missing plugin data.");
 
             // create packages
             _.each(packageDefinitions, function(packageDefinitionOn, packageNameOn) {
                 packages[packageNameOn.toLowerCase()] = pluginPackage.create(packageDefinitionOn);
+            });
+
+            _.each(packagesInputObj, function(packagesInputObjOn, packageNameOn) {
+
+                if (true == _.has(packagesInputObjOn, "data")) {
+                    add(packageNameOn, packagesInputObjOn.data);
+                }
+
+                if (true == _.has(packagesInputObjOn, "linked")) {
+                    console.log("LINKED");
+                    console.log(packagesInputObjOn.linked);
+                }
             });
 
             return this;
@@ -47,27 +73,14 @@ function PackageCollector()
             return getPackages(direction);
         },
         add: function(packageName, newDocument) {
-
-            if (!packageName) throw Error("Missing package definitions.");
-            packageName = packageName.toLowerCase();
-
-            if (true == Array.isArray(newDocument)) {
-                packages[packageName].addDocuments(newDocument);
-            }
-            else {
-                packages[packageName].addDocument(newDocument);
-            }
-
-        },
-        getTemplate: function(packageName) {
-
+            add(packageName, newDocument);
         }
     }
 };
 
-function create(packageDefinitions)
+function create(packageDefinitions, packagesInputObj)
 {
-    return new PackageCollector().init(packageDefinitions);
+    return new PackageCollector().init(packageDefinitions, packagesInputObj);
 };
 
 module.exports.create = create;

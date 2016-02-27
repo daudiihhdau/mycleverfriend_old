@@ -12,10 +12,11 @@
     "name": "ReadRssFeed",
     "version": "1.0.0.1",
     "input": {
-      "URLInfo": [{
-        "numFeedItems": 20,
-        "url": "http://www.spiegel.de/schlagzeilen/index.rss"
-      },
+      "URLInfo": {
+        "data": [{
+          "numFeedItems": 20,
+          "url": "http://www.spiegel.de/schlagzeilen/index.rss"
+        },
         {
           "numFeedItems": 20,
           "url": "http://www.amazon.de/gp/rss/bestsellers/books/166024031/ref=zg_bs_166024031_rsslink"
@@ -24,6 +25,28 @@
           "numFeedItems": 20,
           "url": "http://newsfeed.zeit.de/index"
         }]
+      }
+    }
+  },
+  {
+    "id": 1,
+    "name": "WriteRssFeed",
+    "version": "1.0.0.1",
+    "input": {
+      "feedChannel": {
+        "data": [
+          {
+            "title": "I love data!",
+            "description": "Alles über Daten",
+            "link": "http://www.test.de"
+          }]
+      },
+      "feedItems": {
+        "linked": {
+          "plugin": 0,
+          "package": "RSSOutput"
+        }
+      }
     }
   }]
 }

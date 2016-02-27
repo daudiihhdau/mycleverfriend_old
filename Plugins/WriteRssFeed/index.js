@@ -29,9 +29,6 @@ module.exports.packageDefinitions = {
 module.exports.work = function(packages, callback) {
 
     _.each(packages.get("feedChannel"), function(feedChannelOn) {
-
-        console.log(feedChannelOn);
-
         var feed = new feedWriter(feedChannelOn);
         _.each(packages.get("feedItems"), function(feedItemOn) {
             feed.addItem(feedItemOn);

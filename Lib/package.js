@@ -61,6 +61,9 @@ function PluginPackage()
         getDescription: function () {
             return description;
         },
+        hasReference: function () {
+            return null;
+        },
         getDocuments: function () {
             return packageCollection.data;
         },

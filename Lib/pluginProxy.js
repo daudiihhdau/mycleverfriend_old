@@ -17,13 +17,12 @@ function PluginProxy()
     var pluginModule;
     var packageCollection;
 
-    function loadPlugin(callback) {
+    function setupPlugin(packagesInputObj, callback) {
         var test = resolveIsModuleAvailable(getPluginPath());
-        console.log("module available " + test);
+        //console.log('load plugin "' + name + '" using: "' + test);
 
-        console.log("load plugin");
         pluginModule = require(getPluginPath());
-        packageCollection = packageCollector.create(pluginModule.packageDefinitions);
+        packageCollection = packageCollector.create(pluginModule.packageDefinitions, packagesInputObj);
 
         callback(null);
 
@@ -51,12 +50,8 @@ function PluginProxy()
             name = missionObjPlugin.name;
             version = missionObjPlugin.version;
 
-            loadPlugin(function(err) {
+            setupPlugin(missionObjPlugin.input, function(err) {
                 if (err) throw err;
-
-                _.each(missionObjPlugin.input, function(missionObjPluginInput, packageNameOn) {
-                    packageCollection.add(packageNameOn, missionObjPluginInput);
-                });
             });
             return this;
         },
