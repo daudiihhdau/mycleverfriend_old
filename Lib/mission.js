@@ -47,7 +47,7 @@ function Mission()
             return specifications.tags;
         },
         getPlugins: function () {
-            return null; //pluginProxies;
+            return pluginLoopNode;
         },
         start : function (callback) {
 

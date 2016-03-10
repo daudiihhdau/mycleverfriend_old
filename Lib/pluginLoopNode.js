@@ -11,16 +11,8 @@ function PluginLoopNode()
     return {
         init: function (options) {
 
-            return this;
-        },
-        // todo: add new pluginProxy and pluginCollector here
-        add: function (pluginNode) {
+            if (!options.pluginProxies) throw new Error('options.pluginProxies is required');
 
-            if (!pluginNode) throw Error("Missing pluginNode.");
-
-            // todo: test is type of pluginNode
-
-            pluginProxies.push(pluginNode);
             return this;
         }
     }

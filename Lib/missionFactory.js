@@ -2,6 +2,19 @@
 
 /**
  * Created by daudiihhdau on 16.12.15.
+
+ // create package properties
+
+ // create packages
+
+ // create packageCollections
+
+ // create pluginNode
+
+ // create pluginLoopNode
+
+ // create mission
+
  */
 
 var fs = require('fs');
@@ -10,9 +23,11 @@ var pluginLoopNode = require('./pluginLoopNode.js');
 var pluginNode = require('./pluginNode.js');
 var pluginPackage = require('./pluginPackage.js');
 var packageProperty = require('./packageProperty.js');
+var packageCollector = require('./packageCollector.js');
 
 function MissionFactory()
 {
+    var db;
     var filePath;
 
     /*/ prepare packages
@@ -76,88 +91,101 @@ function MissionFactory()
         }
     }
 
+    function createMission(missionJsonObj, pluginModules, callback) {
+
+        var missionObj = mission.create({
+            'db': db,
+            'specifications': missionJsonObj.specifications,
+            'pluginLoopNode': createPluginLoopNodes(pluginModules)
+        });
+
+        return callback(null, missionObj);
+    }
+
+    function createPluginLoopNodes(pluginDefinitions) {
+
+        var pluginLoopNodes = [];
+
+        //todo: this should be loopt through all pluginLoopNode
+        pluginLoopNodes.push(pluginLoopNode.create({ 'pluginProxies': createPluginProxies(pluginDefinitions) }));
+
+        return pluginLoopNodes;
+    }
+
+    function createPluginProxies(pluginDefinitions) {
+
+        var plugins = [];
+
+        _.each(pluginDefinitions, function(pluginDefinitionOn) {
+
+            pluginDefinitionOn.packageCollection = createPackageCollection(pluginDefinitionOn.packageDefinitions);
+            pluginDefinitionOn.parent = 'test'; //todo: this should be a pluginLoopNode
+
+            plugins.push(pluginNode.create(pluginDefinitionOn));
+        });
+
+        return plugins;
+    }
+
+    function createPackageCollection(packageDefinitions) {
+
+        return packageCollector.create({ 'packages':  createPackages(packageDefinitions) });
+    }
+
+    function createPackages(packageDefinitions) {
+
+        var packages = [];
+
+        _.each(packageDefinitions, function(packageDefinitionOn) {
+
+            packageDefinitionOn.dbCollection = db.addCollection(packageDefinitionOn.name);
+            packageDefinitionOn.packageProperties = createPackageProperties(packageDefinitionOn.packageProperties);
+
+            packages.push(pluginPackage.create(packageDefinitionOn));
+
+        });
+
+        return packages;
+    }
+
+    function createPackageProperties(propertyDefinitions) {
+
+        var packageProperties = [];
+
+        _.each(propertyDefinitions, function(propertyDefinitionOn) {
+            packageProperties.push(packageProperty.create(propertyDefinitionOn));
+        });
+
+        return packageProperties;
+    }
+
     return {
         init: function (options, callback) {
 
             if (!options.db) throw new Error('options.db is required');
             if (!options.filePath) throw new Error('options.filePath is required');
 
+            db = options.db;
             filePath = options.filePath;
 
             async.waterfall([
                 loadMissionFile,
                 function (missionJsonObj, next) {
                     // load all plugins
-                    async.map(missionJsonObj.plugins, loadPlugin, next);
+                    async.map(missionJsonObj.plugins, loadPlugin, function(err, plugins) {
+
+                        if (err) throw err;
+
+                        return next(null, missionJsonObj, plugins);
+                    });
                 },
-                function (pluginModules, next) {
+                createMission
+            ], function (err, mission) {
 
-                    _.each(pluginModules, function(pluginModuleOn) {
+                if (err) throw err;
 
-                        console.log(pluginModuleOn)
-
-                        _.each(pluginModuleOn.packageDefinitions, function(packageDefinitionOn) {
-
-                            var test = pluginPackage.create(packageDefinitionOn);
-                            console.log("ddd" + test);
-
-                            _.each(packageDefinitionOn.properties, function(propertyDefinitionOn) {
-                                var test2 = packageProperty.create(propertyDefinitionOn);
-                            });
-                        });
-                    });
-
-                    // create package properties
-                    _.each(packageDefinition.properties, function(propertyDefinitionOn, propertyName) {
-                        properties[propertyName.toLowerCase()] = packageProperty.create(propertyDefinitionOn);
-                    });
-
-
-                    // todo: add packageCollection to pluginModules
-                    //var packageCollection =
-
-
-
-                    var pluginLoops = pluginLoopNode.create();
-
-                    _.each(pluginModules, function(pluginModuleOn) {
-                        pluginLoops.add(pluginNode.create(pluginModuleOn));
-                    });
-
-                    // create package properties
-
-                    // create packages
-
-                    // create packageCollections
-
-                    // create pluginNode
-
-                    // create pluginLoopNode
-
-                    // create mission
-
-
-
-                    /*/ create packages
-                    _.each(options.packageDefinitions, function(packageDefinitionOn, packageNameOn) {
-                        packages[packageNameOn.toLowerCase()] = pluginPackage.create({  'name': packageNameOn,
-                            'direction': packageDefinitionOn.direction,
-                            'description': packageDefinitionOn.description,
-                            'dbCollection': options.dbCollection });
-                    });*/
-                }
-                //,createMission
-            ], function (err, result) {
-                // result now equals 'done'
+                return callback(null, mission)
             });
-
-            /*
-              var newMission = mission.create({   'db': db,
-             'specifications': missionJsonObj.specifications,
-             'pluginLoopNode': pluginLoopNode
-             });
-            */
-
         }
     }
 }
