@@ -1,6 +1,6 @@
 {
-  "mission_version": 1,
-  "specification": {
+  "missionVersion": 1,
+  "specifications": {
     "name": "Search Images in Directories",
     "version": "1.0.0.0",
     "author": "Mathias Mielitz",

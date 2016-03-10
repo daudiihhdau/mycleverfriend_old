@@ -5,26 +5,28 @@
  */
 var feedWriter = require("feed");
 
-module.exports.packageDefinitions = {
-    "feedChannel": {
+module.exports.packageDefinitions = [
+    {
+        "name": "feedChannel",
         "direction": "In",
         "description": "Defines the rss-feed channel setting.",
-        "properties": {
-            "title":        { "type": "string", "description": "Headline of the feed." },
-            "description":  { "type": "string", "description": "The description of this feed." },
-            "link":         { "type": "url", "description": "Link to the website of this feed." }
-        }
+        "properties": [
+            {   "name": "title",        "type": "string",   "description": "Headline of the feed." },
+            {   "name": "description",  "type": "string",   "description": "The description of this feed." },
+            {   "name": "link",         "type": "url",      "description": "Link to the website of this feed." }
+        ]
     },
-    "feedItems": {
+    {
+        "name": "feedItems",
         "direction": "In",
         "description": "Defines the item data which should written in rss-feed format.",
-        "properties": {
-            "title":        { "type": "string", "description": "Headline of the feed item."},
-            "link":         { "type": "url",    "description": "Link to the website of this feed item."},
-            "description":  { "type": "string", "description": "The article/text itself."}
-        }
+        "properties": [
+            {   "name": "title",        "type": "string",   "description": "Headline of the feed item."},
+            {   "name": "link",         "type": "url",      "description": "Link to the website of this feed item."},
+            {   "name": "description",  "type": "string",   "description": "The article/text itself."}
+        ]
     }
-};
+];
 
 module.exports.work = function(packages, callback) {
 

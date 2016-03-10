@@ -1,6 +1,6 @@
 {
-  "mission_version": 1,
-  "specification": {
+  "missionVersion": 1,
+  "specifications": {
     "name": "My Favorites On Amazon",
     "version": "1.0.0.1",
     "author": "Mathias Mielitz",

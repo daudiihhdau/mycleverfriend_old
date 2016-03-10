@@ -1,76 +1,69 @@
+"use strict";
+
 /**
  * Created by daudiihhdau on 16.12.15.
  */
 
-async = require('async');
-_ = require('underscore');
-var lokijs = require('lokijs');
-db = new lokijs('MyCleverFriend');
-var pluginProxy = require('./pluginProxy.js');
-
-// todo: use dependency injection for the database
 //https://blog.risingstack.com/fundamental-node-js-design-patterns/
 //https://blog.risingstack.com/dependency-injection-in-node-js/
 function Mission()
 {
-    var mission_version;
-    var name;
-    var version;
-    var author;
-    var description;
-    var tags;
-    var pluginProxies = [];
+    var db;
+    var specifications;
+    var pluginLoopNode;
 
     return {
-        init: function (missionObj) {
+        init: function (options) {
 
-            mission_version = missionObj.mission_version;
-            name = missionObj.specification.name;
-            version = missionObj.specification.version;
-            author = missionObj.specification.author;
-            description = missionObj.specification.description;
-            tags = missionObj.specification.tags;
+            if (!options.db) {
+                throw new Error('options.db is required');
+            }
+            if (!options.specifications) {
+                throw new Error('options.specifications is required');
+            }
+            if (!options.pluginLoopNode) {
+                throw new Error('options.pluginLoopNode is required');
+            }
 
-            pluginProxies = [];
-            _.each(missionObj.plugins, function(missionObjPluginOn) {
-                pluginProxies.push(pluginProxy.create(missionObjPluginOn));
-            })
+            db = options.db;
+            specifications = options.specifications;
+            pluginLoopNode = options.pluginLoopNode;
 
             return this;
         },
         getName: function () {
-            return name;
+            return specifications.name;
         },
         getVersion: function () {
-            return version;
+            return specifications.version;
         },
         getAuthor: function () {
-            return author;
+            return specifications.author;
         },
         getDescription: function () {
-            return description;
+            return specifications.description;
         },
         getTags: function () {
-            return tags;
+            return specifications.tags;
         },
         getPlugins: function () {
-            return pluginProxies;
+            return null; //pluginProxies;
         },
         start : function (callback) {
 
             console.log("Trying to start the mission.");
 
-            _.each(pluginProxies, function(pluginProxyOn) {
+            /*_.each(pluginProxies, function(pluginProxyOn) {
                 console.log('starte plugin "' + pluginProxyOn.getName() + '" using: ' + pluginProxyOn.getPath());
                 pluginProxyOn.start(callback);
-            });
+            });*/
         }
     }
 }
 
-function create(missionObj)
+function create(options)
 {
-    return new Mission().init(missionObj);
+    return new Mission().init(options);
 }
 
 module.exports.create = create;

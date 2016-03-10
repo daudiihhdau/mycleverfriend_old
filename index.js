@@ -16,7 +16,8 @@ server.route({
 
         //./Data/Missions/SearchFiles.json;
         //./Data/Missions/AmazonHighlights2.json
-        myCleverFriend.readMissionFile('./Data/Missions/' + encodeURIComponent(request.params.mission), function (err, mission) {
+        myCleverFriend.load('./Data/Missions/' + encodeURIComponent(request.params.mission), function (err, mission) {
+
             if (err) if (err) throw reply(err);
 
             /*console.log(mission.getTags());

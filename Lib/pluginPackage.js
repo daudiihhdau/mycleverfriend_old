@@ -11,8 +11,8 @@ function PluginPackage()
     var name;
     var description;
     var direction;
-    var packageCollection;
-    var properties = {};
+    var dbCollection;
+    var packageProperties = {};
 
     function addDocument(document) {
 
@@ -23,30 +23,32 @@ function PluginPackage()
         });
 
         // ignore invalid elements
-        var cleanedLowerCaseDocument = _.pick(lowerCaseDocument, _.keys(properties));
+        var cleanedLowerCaseDocument = _.pick(lowerCaseDocument, _.keys(packageProperties));
 
         // ignore all elements with missing elements
-        if (_.size(cleanedLowerCaseDocument) == _.size(properties)) {
-            packageCollection.insert(cleanedLowerCaseDocument);
+        if (_.size(cleanedLowerCaseDocument) == _.size(packageProperties)) {
+            dbCollection.insert(cleanedLowerCaseDocument);
         }
 
         // todo: write to error log
     }
 
     return {
-        init: function (packageDefinition) {
+        init: function (options) {
 
-            name = packageDefinition.name;
-            direction = packageDefinition.direction;
-            description = packageDefinition.description;
+            if (!options.name) throw new Error('options.name is required');
+            if (!options.direction) throw new Error('options.direction is required');
+            if (!options.description) throw new Error('options.description is required');
+            if (!options.dbCollection) throw new Error('options.dbCollection is required');
+            if (!options.packageProperties) throw new Error('options.packageProperties is required');
 
-            // create package properties
-            _.each(packageDefinition.properties, function(propertyDefinitionOn, propertyName) {
-                properties[propertyName.toLowerCase()] = packageProperty.create(propertyDefinitionOn);
-            });
+            name = options.name;
+            direction = options.direction;
+            description = options.description;
+            dbCollection = options.dbCollection;
+            packageProperties = options.packageProperties;
 
-            packageCollection = db.addCollection(name);
-            packageCollection.on("pre-insert", function (data) {
+            dbCollection.on("pre-insert", function (data) {
                 //console.log(data);
             })
 
@@ -65,7 +67,7 @@ function PluginPackage()
             return null;
         },
         getDocuments: function () {
-            return packageCollection.data;
+            return dbCollection.data;
         },
         addDocument: function (document) {
             addDocument(document)
@@ -79,9 +81,9 @@ function PluginPackage()
     }
 };
 
-function create(packageDefinition)
+function create(options)
 {
-    return new PluginPackage().init(packageDefinition);
+    return new PluginPackage().init(options);
 };
 
 module.exports.create = create;

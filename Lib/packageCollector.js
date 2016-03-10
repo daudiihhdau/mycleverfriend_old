@@ -36,28 +36,11 @@ function PackageCollector()
     }
 
     return {
-        init: function (packageDefinitions, missionObjPlugin) {
+        init: function (options) {
 
-            if (!packageDefinitions) throw Error("Missing package definitions.");
-            if (!missionObjPlugin) throw Error("Missing plugin data.");
+            if (!options.packages) throw Error("Missing options.packages.");
 
-            // create packages
-            _.each(packageDefinitions, function(packageDefinitionOn, packageNameOn) {
-                packages[packageNameOn.toLowerCase()] = pluginPackage.create(packageDefinitionOn);
-            });
-
-            // prepare packages
-            _.each(missionObjPlugin.input, function(missionObjPluginOn, packageNameOn) {
-
-                if (true == _.has(missionObjPluginOn, "data")) {
-                    add(packageNameOn, missionObjPluginOn.data);
-                }
-
-                if (true == _.has(missionObjPluginOn, "linked")) {
-                    console.log("LINKED");
-                    console.log(missionObjPluginOn.linked);
-                }
-            });
+            packages = options.packages;
 
             return this;
         },
@@ -79,9 +62,9 @@ function PackageCollector()
     }
 };
 
-function create(packageDefinitions, missionObjPlugin)
+function create(options)
 {
-    return new PackageCollector().init(packageDefinitions, missionObjPlugin);
+    return new PackageCollector().init(options);
 };
 
 module.exports.create = create;

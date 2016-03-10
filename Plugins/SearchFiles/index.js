@@ -6,22 +6,24 @@
 var fs = require('fs');
 var path = require('path');
 
-module.exports.packageDefinitions = {
-    "paths": {
+module.exports.packageDefinitions = [
+    {
+        "name": "paths",
         "direction": "In",
         "description": "Defines the directories you like to search through.",
-        "properties": {
-            "path": { "type": "path", "description": "Path where you like to search the expected files." }
-        }
+        "properties": [
+            {   "name": "path",     "type": "path", "description": "Path where you like to search the expected files." }
+        ]
     },
-    "foundFiles": {
+    {
+        "name": "foundFiles",
         "direction": "Out",
         "description": "Defines all found files with the expected data.",
-        "properties": {
-            "filename": { "type": "path", "description": "The expected result of the filesearch." }
-        }
+        "properties": [
+            {   "name": "filename", "type": "path", "description": "The expected result of the filesearch." }
+        ]
     }
-};
+];
 
 module.exports.work = function(packages, callback) {
     async.map(packages.get("paths"), getFiles, callback);

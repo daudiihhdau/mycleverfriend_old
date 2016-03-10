@@ -6,18 +6,24 @@
 
 function PackageProperty()
 {
+    var name;
     var type;
     var description;
     var defaultValue;
     var validation;
 
     return {
-        init: function (propertyDefinition) {
+        init: function (options) {
 
-            type = propertyDefinition.type;
-            description = propertyDefinition.description;
-            defaultValue = propertyDefinition.defaultValue ? propertyDefinition.defaultValue : undefined;
-            validation = propertyDefinition.validation ? propertyDefinition.validation : undefined;
+            if (!options.name) throw new Error('options.name is required');
+            if (!options.type) throw new Error('options.type is required');
+            if (!options.description) throw new Error('options.description is required');
+
+            name = options.name;
+            type = options.type;
+            description = options.description;
+            defaultValue = options.defaultValue ? options.defaultValue : undefined;
+            validation = options.validation ? options.validation : undefined;
 
             return this;
         },
@@ -39,9 +45,9 @@ function PackageProperty()
     }
 };
 
-function create(propertyDefinition)
+function create(options)
 {
-    return new PackageProperty().init(propertyDefinition);
+    return new PackageProperty().init(options);
 };
 
 module.exports.create = create;

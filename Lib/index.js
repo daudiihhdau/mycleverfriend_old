@@ -1,15 +1,17 @@
-"use strict";
-
 //todo: logging
 
-var missionReader = require('./missionReader.js');
+async = require('async');
+_ = require('underscore');
+var lokijs = require('lokijs');
+var missionFactory = require('./missionFactory.js')
 
 function load(filePath, callback)
 {
-    missionReader.load(filePath, callback)
+    missionFactory.create({ 'db': new lokijs('MyCleverFriend'),
+                            'filePath': filePath
+    }, callback);
 }
 
 module.exports = {
-    readMissionFile: load,
-    start: null
+    load: load
 }
