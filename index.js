@@ -27,14 +27,15 @@ server.route({
             console.log(mission.getTags());
 
             console.log(mission.getPlugins());
-            console.log(mission.getPlugins()[0].getPackages("In")[0].getName());
-            console.log(mission.getPlugins()[0].getPackages("In")[0].getDocuments());
-            console.log(mission.getPlugins()[0].getPackages("Out")[0].getName());*/
+            console.log(mission.getPlugins()[0].getPackages().getByDirection("In")[0].getName());
+            console.log(mission.getPlugins()[0].getPackages().getByDirection("In")[0].getDocuments());
+            console.log(mission.getPlugins()[0].getPackages().getByDirection("Out")[0].getName());
+            console.log(mission.getPlugins()[0].getPackages().getByDirection("Out")[0].getDocuments());*/
 
             mission.start(function (err) {
                 if (err) throw reply(err);
 
-                reply(mission.getPlugins()[0].getPackages("Out")[0].getDocuments());
+                reply(mission.getPlugins()[1].getPackages().getByDirection("Out")[0].getDocuments());
             })
         });
     }

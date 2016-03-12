@@ -31,12 +31,16 @@ module.exports.packageDefinitions = [
 module.exports.work = function(packages, callback) {
 
     _.each(packages.get("feedChannel"), function(feedChannelOn) {
+
         var feed = new feedWriter(feedChannelOn);
+
+        console.log(packages.get("feedItems"));
+
         _.each(packages.get("feedItems"), function(feedItemOn) {
             feed.addItem(feedItemOn);
         });
 
-        console.log(feed.render('rss-2.0'))
+        //console.log(feed.render('rss-2.0'))
     });
 }
 
