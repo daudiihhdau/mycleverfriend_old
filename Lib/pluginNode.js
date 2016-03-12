@@ -18,7 +18,7 @@ function PluginNode()
     var author;
     var license;
     var version;
-    var pluginModule;
+    var pluginProxy;
     var packageCollection;
 
     return {
@@ -31,6 +31,7 @@ function PluginNode()
             if (!options.author) throw new Error('options.author is required');
             if (!options.license) throw new Error('options.license is required');
             if (!options.version) throw new Error('options.version is required');
+            if (!options.work) throw new Error('options.work is required');
             if (!options.parent) throw new Error('options.parent is required');
             if (!options.packageCollection) throw new Error('options.packageCollection is required');
 
@@ -40,6 +41,7 @@ function PluginNode()
             author = options.author;
             license = options.license;
             version = options.version;
+            pluginProxy = options.work;
             parent = options.parent;
             packageCollection = options.packageCollection;
 
@@ -64,7 +66,7 @@ function PluginNode()
             return packageCollection.getByDirection(direction);
         },
         start: function(callback) {
-            pluginModule.work(packageCollection, callback);
+            pluginProxy(packageCollection, callback);
             return this;
         },
         reset: function() {

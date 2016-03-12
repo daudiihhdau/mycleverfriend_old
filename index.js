@@ -20,7 +20,7 @@ server.route({
 
             if (err) if (err) throw reply(err);
 
-            console.log(mission.getName());
+            /*console.log(mission.getName());
             console.log(mission.getVersion());
             console.log(mission.getAuthor());
             console.log(mission.getDescription());
@@ -28,8 +28,8 @@ server.route({
 
             console.log(mission.getPlugins());
             console.log(mission.getPlugins()[0].getPackages("In")[0].getName());
-            console.log(mission.getPlugins()[0].getPackages("In")[0].getItems());
-            console.log(mission.getPlugins()[0].getPackages("Out")[0].getName());
+            console.log(mission.getPlugins()[0].getPackages("In")[0].getDocuments());
+            console.log(mission.getPlugins()[0].getPackages("Out")[0].getName());*/
 
             mission.start(function (err) {
                 if (err) throw reply(err);

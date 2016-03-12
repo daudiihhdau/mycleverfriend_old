@@ -30,33 +30,6 @@ function MissionFactory()
     var db;
     var filePath;
 
-    /*/ prepare packages
-     _.each(missionJsonObjPlugin.input, function(missionJsonObjPluginOn, packageNameOn) {
-
-     if (true == _.has(missionJsonObjPluginOn, "data")) {
-     add(packageNameOn, missionJsonObjPluginOn.data);
-     }
-
-     if (true == _.has(missionJsonObjPluginOn, "linked")) {
-     console.log("LINKED");
-     console.log(missionJsonObjPluginOn.linked);
-     }
-     });
-
-
-     pluginNode.create({
-     'id': pluginJsonObjOn.id,
-     'name': pluginJsonObjOn.name,
-     'version': pluginJsonObjOn.version,
-     "parent": pluginCollection
-     }, function(err, newPluginNode) {
-
-     pluginLoopNodes.add(newPluginNode);
-     });
-
-
-     */
-
     function loadMissionFile(next) {
 
         console.log('loading mission file: '+ filePath);
@@ -91,71 +64,85 @@ function MissionFactory()
         }
     }
 
-    function createMission(missionJsonObj, pluginModules, callback) {
+    function loadPluginDefinitions(missionJsonObj, callback) {
 
-        var missionObj = mission.create({
-            'db': db,
-            'specifications': missionJsonObj.specifications,
-            'pluginLoopNode': createPluginLoopNodes(pluginModules)
+        async.map(missionJsonObj.plugins, loadPlugin, function(err, pluginDefinitions) {
+
+            if (err) throw err;
+
+            return callback(null, missionJsonObj, pluginDefinitions);
+        });
+    }
+
+    function createPlugins(missionJsonObj, pluginDefinitions, callback) {
+
+        return callback(null, missionJsonObj, buildPluginNodes(pluginDefinitions));
+    }
+
+    function fillPlugins(missionJsonObj, pluginNodes, callback) {
+
+        console.log(pluginNodes)
+        console.log('###')
+        console.log(missionJsonObj)
+
+        _.each(pluginNodes, function(pluginNodeOn) {
+
         });
 
+        return callback(null, missionJsonObj, pluginNodes);
+    }
+
+    function createMission(missionJsonObj, pluginNodes, callback) {
+
+        var missionObj = mission.create({
+            'specifications': missionJsonObj.specifications,
+            //'pluginLoopNode': createPluginLoopNodes(pluginModules)
+            'pluginProxies': pluginNodes
+        });
         return callback(null, missionObj);
     }
 
-    function createPluginLoopNodes(pluginDefinitions) {
-
-        var pluginLoopNodes = [];
-
-        //todo: this should be loopt through all pluginLoopNode
-        pluginLoopNodes.push(pluginLoopNode.create({ 'pluginProxies': createPluginProxies(pluginDefinitions) }));
-
-        return pluginLoopNodes;
-    }
-
-    function createPluginProxies(pluginDefinitions) {
+    function buildPluginNodes(pluginDefinitions) {
 
         var plugins = [];
 
         _.each(pluginDefinitions, function(pluginDefinitionOn) {
 
-            pluginDefinitionOn.packageCollection = createPackageCollection(pluginDefinitionOn.packageDefinitions);
+            pluginDefinitionOn.packageCollection = buildPackageCollection(pluginDefinitionOn.packageDefinitions);
             pluginDefinitionOn.parent = 'test'; //todo: this should be a pluginLoopNode
 
-            plugins.push(pluginNode.create(pluginDefinitionOn));
+            plugins[pluginDefinitionOn.name.toLowerCase()] = pluginNode.create(pluginDefinitionOn);
         });
-
         return plugins;
     }
 
-    function createPackageCollection(packageDefinitions) {
+    function buildPackageCollection(packageDefinitions) {
 
-        return packageCollector.create({ 'packages':  createPackages(packageDefinitions) });
+        return packageCollector.create({ 'packages':  buildPackages(packageDefinitions) });
     }
 
-    function createPackages(packageDefinitions) {
+    function buildPackages(packageDefinitions) {
 
-        var packages = [];
+        var packages = {};
 
         _.each(packageDefinitions, function(packageDefinitionOn) {
 
             packageDefinitionOn.dbCollection = db.addCollection(packageDefinitionOn.name);
-            packageDefinitionOn.packageProperties = createPackageProperties(packageDefinitionOn.packageProperties);
+            packageDefinitionOn.packageProperties = buildPackageProperties(packageDefinitionOn.packageProperties);
 
-            packages.push(pluginPackage.create(packageDefinitionOn));
+            packages[packageDefinitionOn.name.toLowerCase()] = pluginPackage.create(packageDefinitionOn);
 
         });
-
         return packages;
     }
 
-    function createPackageProperties(propertyDefinitions) {
+    function buildPackageProperties(propertyDefinitions) {
 
         var packageProperties = [];
 
         _.each(propertyDefinitions, function(propertyDefinitionOn) {
             packageProperties.push(packageProperty.create(propertyDefinitionOn));
         });
-
         return packageProperties;
     }
 
@@ -170,15 +157,9 @@ function MissionFactory()
 
             async.waterfall([
                 loadMissionFile,
-                function (missionJsonObj, next) {
-                    // load all plugins
-                    async.map(missionJsonObj.plugins, loadPlugin, function(err, plugins) {
-
-                        if (err) throw err;
-
-                        return next(null, missionJsonObj, plugins);
-                    });
-                },
+                loadPluginDefinitions,
+                createPlugins,
+                fillPlugins,
                 createMission
             ], function (err, mission) {
 

@@ -4,6 +4,8 @@
 
 //https://blog.risingstack.com/fundamental-node-js-design-patterns/
 //https://blog.risingstack.com/dependency-injection-in-node-js/
+
+// todo
 function PluginLoopNode()
 {
     var pluginProxies = [];

@@ -8,26 +8,27 @@
 //https://blog.risingstack.com/dependency-injection-in-node-js/
 function Mission()
 {
-    var db;
     var specifications;
-    var pluginLoopNode;
+
+    //var pluginLoopNode;
+    var pluginProxies;
 
     return {
         init: function (options) {
 
-            if (!options.db) {
-                throw new Error('options.db is required');
-            }
             if (!options.specifications) {
                 throw new Error('options.specifications is required');
             }
-            if (!options.pluginLoopNode) {
+            /*if (!options.pluginLoopNode) {
                 throw new Error('options.pluginLoopNode is required');
+            }*/
+            if (!options.pluginProxies) {
+                throw new Error('options.pluginProxies is required');
             }
 
-            db = options.db;
             specifications = options.specifications;
-            pluginLoopNode = options.pluginLoopNode;
+            //pluginLoopNode = options.pluginLoopNode;
+            pluginProxies = options.pluginProxies;
 
             return this;
         },
@@ -47,16 +48,17 @@ function Mission()
             return specifications.tags;
         },
         getPlugins: function () {
-            return pluginLoopNode;
+            // pluginLoopNode
+            return pluginProxies;
         },
         start : function (callback) {
 
             console.log("Trying to start the mission.");
 
-            /*_.each(pluginProxies, function(pluginProxyOn) {
-                console.log('starte plugin "' + pluginProxyOn.getName() + '" using: ' + pluginProxyOn.getPath());
+            _.each(pluginProxies, function(pluginProxyOn) {
+                console.log('starte plugin "' + pluginProxyOn.getName()); // + '" using: ' + pluginProxyOn.getPath());
                 pluginProxyOn.start(callback);
-            });*/
+            });
         }
     }
 }

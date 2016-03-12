@@ -31,9 +31,12 @@ module.exports.packageDefinitions = [
 
 module.exports.work = function(packages, callback) {
 
+    console.log(packages.get("urlInfo"))
+
     async.map(packages.get("urlInfo"), readFeed, callback);
 
     function readFeed(itemOn, callback) {
+
         feedReader(itemOn.url, function (err, articles) {
             if (err) throw err;
 

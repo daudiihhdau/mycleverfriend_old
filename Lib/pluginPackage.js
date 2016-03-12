@@ -16,6 +16,9 @@ function PluginPackage()
 
     function addDocument(document) {
 
+        console.log('#########');
+        console.log(document);
+
         // set lowerCase to every key
         var lowerCaseDocument = {};
         _.each(document, function(value, key) {
@@ -64,7 +67,7 @@ function PluginPackage()
             return description;
         },
         hasReference: function () {
-            return null;
+            return null; //_.has(missionJsonObjPluginOn, "data");
         },
         getDocuments: function () {
             return dbCollection.data;
