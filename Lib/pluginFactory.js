@@ -55,7 +55,7 @@ function PluginFactory()
         _.each(packageDefinitions, function(packageDefinitionOn) {
 
             packageDefinitionOn.dbCollection = db.addCollection(packageDefinitionOn.name);
-            packageDefinitionOn.packageProperties = buildPackageProperties(packageDefinitionOn.packageProperties);
+            packageDefinitionOn.packageProperties = buildPackageProperties(packageDefinitionOn.properties);
 
             packages[packageDefinitionOn.name.toLowerCase()] = pluginPackage.create(packageDefinitionOn);
 
@@ -65,10 +65,10 @@ function PluginFactory()
 
     function buildPackageProperties(propertyDefinitions) {
 
-        var packageProperties = [];
+        var packageProperties = {};
 
         _.each(propertyDefinitions, function(propertyDefinitionOn) {
-            packageProperties.push(packageProperty.create(propertyDefinitionOn));
+            packageProperties[propertyDefinitionOn.name.toLowerCase()] = packageProperty.create(propertyDefinitionOn);
         });
         return packageProperties;
     }
@@ -91,6 +91,11 @@ function PluginFactory()
                 var pluginNode = buildPluginNode(pluginDefinition);
 
                 //todo: fill with data
+                _.each(pluginJsonObj.input, function(inputDataOn, inputPackageNameOn) {
+                    pluginNode.getPackages().add(inputPackageNameOn, inputDataOn.data);
+                });
+
+
                 return callback(null, pluginNode);
             });
         }

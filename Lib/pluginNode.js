@@ -62,8 +62,8 @@ function PluginNode()
         getPath: function() {
             return getPluginPath();
         },
-        getPackages: function(direction) {
-            return packageCollection.getByDirection(direction);
+        getPackages: function() {
+            return packageCollection;
         },
         start: function(callback) {
             pluginProxy(packageCollection, callback);

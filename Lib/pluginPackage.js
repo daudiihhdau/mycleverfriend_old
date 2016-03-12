@@ -16,9 +16,6 @@ function PluginPackage()
 
     function addDocument(document) {
 
-        console.log('#########');
-        console.log(document);
-
         // set lowerCase to every key
         var lowerCaseDocument = {};
         _.each(document, function(value, key) {
