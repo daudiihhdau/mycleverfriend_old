@@ -16,6 +16,12 @@ function PluginLoopNode()
             if (!options.pluginProxies) throw new Error('options.pluginProxies is required');
 
             return this;
+        },
+        add: function (pluginNode) {
+
+        },
+        moveNext: function () {
+
         }
     }
 }
