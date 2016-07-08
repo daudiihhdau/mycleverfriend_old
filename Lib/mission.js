@@ -56,7 +56,7 @@ function Mission()
             console.log("Trying to start the mission.");
 
             _.each(pluginProxies, function(pluginProxyOn) {
-                console.log('starte plugin "' + pluginProxyOn.getName()); // + '" using: ' + pluginProxyOn.getPath());
+                console.log('starte plugin: ' + pluginProxyOn.getName());
                 pluginProxyOn.start(callback);
             });
         }

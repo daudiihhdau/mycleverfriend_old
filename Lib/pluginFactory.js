@@ -1,14 +1,10 @@
 "use strict";
 
-/**
- * Created by daudiihhdau on 16.12.15.
-*/
-
-var helper = require('./helper.js');
 var pluginNode = require('./pluginNode.js');
 var pluginPackage = require('./pluginPackage.js');
 var packageProperty = require('./packageProperty.js');
 var packageCollector = require('./packageCollector.js');
+var helper = require('./helper.js');
 
 function PluginFactory()
 {
@@ -27,69 +23,100 @@ function PluginFactory()
         // todo: lade richtiges plugin
         // todo: downloade, installiere richtiges plugin
 
-        var pluginFile = './../Plugins/' + pluginJsonObj.name;
+        var pluginDirectory = './../Plugins/' + pluginJsonObj.name;
 
-        if (isModuleAvailable(pluginFile)) {
-
-            console.log('loading plugin: ' + pluginFile);
-
-            var plugin = require(pluginFile);
-            var pluginPackage = require(pluginFile + '/package.json');
-
-            plugin.packageDefinitions = helper.convertKeysToLowerCase(plugin.packageDefinitions);
-            pluginJsonObj.input = helper.convertKeysToLowerCase(pluginJsonObj.input);
-
-            _.each(pluginJsonObj.input, function(inputDataOn, inputPackageNameOn) {
-                plugin.packageDefinitions[inputPackageNameOn].input = inputDataOn;
-            });
-
-            // merge plugin and his package-json data
-            var pluginDefinition = _.extend(plugin, pluginPackage);
-
-            return callback(null, pluginDefinition);
+        if (false == isModuleAvailable(pluginDirectory)) {
+            return callback(new Error('Plugin is not available'));
         }
-    }
 
-    function buildPluginNode(pluginDefinition) {
+        console.log('loading plugin: ' + pluginDirectory);
 
-        pluginDefinition.packageCollection = buildPackageCollection(pluginDefinition.packageDefinitions);
-        pluginDefinition.parent = 'test'; //todo: this should be a pluginLoopNode
+        var plugin = require(pluginDirectory);
+        var pluginPackage = require(pluginDirectory + '/package.json');
 
-        return pluginNode.create(pluginDefinition);
-    }
+        plugin.packageDefinitions = helper.convertKeysToLowerCase(plugin.packageDefinitions);
+        pluginJsonObj.input = helper.convertKeysToLowerCase(pluginJsonObj.input);
 
-    function buildPackageCollection(packageDefinitions) {
-
-        return packageCollector.create({ 'packages':  buildPackages(packageDefinitions) });
-    }
-
-    function buildPackages(packageDefinitions) {
-
-        var packages = {};
-
-        _.each(packageDefinitions, function(packageDefinitionOn, packageNameOn) {
-
-            packageDefinitionOn.name = packageNameOn;
-            packageDefinitionOn.dbCollection = db.addCollection(packageDefinitionOn.name);
-            packageDefinitionOn.properties = buildPackageProperties(packageDefinitionOn.properties);
-
-            packages[packageNameOn.toLowerCase()] = pluginPackage.create(packageDefinitionOn);
-
+        // save the key of the packageDefinition as value
+        _.each( plugin.packageDefinitions, function(packageOn, packageNameOn) {
+            packageOn.name = packageNameOn.toLowerCase();
         });
-        return packages;
+
+        // save all input values of the mission file
+        _.each(pluginJsonObj.input, function(inputDataOn, inputPackageNameOn) {
+            plugin.packageDefinitions[inputPackageNameOn.toLowerCase()].input = inputDataOn;
+        });
+
+        // merge plugin and his package-json data
+        var pluginDefinition = _.extend(plugin, pluginPackage);
+
+        return callback(null, pluginDefinition);
     }
 
-    function buildPackageProperties(propertyDefinitions) {
+    function createPackages(pluginDefinition, callback) {
+
+        async.map(pluginDefinition.packageDefinitions,
+
+            function (packageDefinitionOn, callback) {
+
+                async.waterfall([
+                    function(cb) { return cb(null, packageDefinitionOn) },
+                    buildPackageProperties,
+                    buildPackage
+                ], function (err, packageObj) {
+
+                    if (err) throw err;
+
+                    return callback(null, packageObj)
+                });
+            },
+
+            function (err, packages) {
+                if (err) throw err;
+
+                var packagesList = {};
+
+                _.each(packages, function(packageOn) {
+                    packagesList[packageOn.getName().toLowerCase()] = packageOn;
+                });
+
+                return callback(null, pluginDefinition, packagesList);
+        });
+    }
+
+    function buildPackageProperties(packageDefinitionOn, callback) {
 
         var packageProperties = {};
 
-        _.each(propertyDefinitions, function(propertyDefinitionOn, propertyNameOn) {
-
+        _.each(packageDefinitionOn.properties, function(propertyDefinitionOn, propertyNameOn) {
+            // save the property key name as value
             propertyDefinitionOn.name = propertyNameOn;
-
             packageProperties[propertyNameOn.toLowerCase()] = packageProperty.create(propertyDefinitionOn);
         });
-        return packageProperties;
+
+        packageDefinitionOn.properties = packageProperties;
+
+        return callback(null, packageDefinitionOn);
+    }
+
+    function buildPackage(packageDefinitionOn, callback) {
+
+        packageDefinitionOn.dbCollection = db.addCollection(packageDefinitionOn.name);
+
+        return callback(null, pluginPackage.create(packageDefinitionOn));
+    }
+
+    function createPackageCollector(pluginDefinition, packages, callback) {
+
+        return callback(null, pluginDefinition, packageCollector.create({ 'packages':  packages }));
+    }
+
+    function createPlugin(pluginDefinition, packageCollector, callback) {
+
+        pluginDefinition.packageCollection = packageCollector;
+        pluginDefinition.parent = 'test'; //todo: this should be a pluginLoopNode
+
+        return callback(null, pluginNode.create(pluginDefinition));
     }
 
     return {
@@ -103,17 +130,21 @@ function PluginFactory()
         },
         createPlugin: function (pluginJsonObj, callback) {
 
-            loadPluginFile(pluginJsonObj, function (err, pluginDefinition) {
+            async.waterfall([
+                function(cb) { return cb(null, pluginJsonObj) },
+                loadPluginFile,
+                createPackages,
+                createPackageCollector,
+                createPlugin
+            ], function (err, plugin) {
 
                 if (err) throw err;
 
-                var pluginNode = buildPluginNode(pluginDefinition);
-                return callback(null, pluginNode);
+                return callback(null, plugin)
             });
         }
     }
 }
-
 
 function create(options)
 {

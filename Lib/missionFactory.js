@@ -38,14 +38,9 @@ function MissionFactory()
         });
     }
 
-    function loadPlugin(pluginJsonObj, callback) {
-
-        pluginFactory.createPlugin(pluginJsonObj, callback)
-    }
-
     function createPlugins(missionJsonObj, callback) {
 
-        async.map(missionJsonObj.plugins, loadPlugin, function(err, pluginNodes) {
+        async.map(missionJsonObj.plugins, pluginFactory.createPlugin, function(err, pluginNodes) {
 
             if (err) throw err;
 

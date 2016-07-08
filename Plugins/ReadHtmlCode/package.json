@@ -1,0 +1,11 @@
+{
+  "name": "ReadHtmlCode",
+  "version": "0.0.0",
+  "description": "Download the HTML source code of a website.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mathias Mielitz",
+  "license": "BSD-2-Clause"
+}

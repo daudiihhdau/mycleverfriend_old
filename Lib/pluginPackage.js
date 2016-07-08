@@ -5,7 +5,6 @@
  */
 
 var helper = require('./helper.js');
-var packageProperty = require('./packageProperty.js');
 
 function PluginPackage()
 {

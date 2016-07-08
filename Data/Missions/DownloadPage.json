@@ -1,0 +1,25 @@
+{
+  "missionVersion": 1,
+  "specifications": {
+    "name": "DownloadPage",
+    "version": "1.0.0.0",
+    "author": "Mathias Mielitz",
+    "description": "test.",
+    "tags": ["test"]
+  },
+  "plugins": [{
+    "id": 0,
+    "name": "ReadHtmlCode",
+    "version": "1.0.0.0",
+    "input": {
+      "urlInfo": {
+        "data": [{
+          "url": "http://www.saturn.de/de/category/_waschmaschinen-475965.html"
+        },
+        {
+          "url": "http://www.saturn.de/de/product/_gorenje-wa-7439-sat1-2066436.html"
+        }]
+      }
+    }
+  }]
+}
