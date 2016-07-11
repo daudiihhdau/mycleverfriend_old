@@ -57,6 +57,9 @@ function Mission()
 
             _.each(pluginProxies, function(pluginProxyOn) {
                 console.log('starte plugin: ' + pluginProxyOn.getName());
+
+                // todo: prepare package values (queryReferences)
+
                 pluginProxyOn.start(callback);
             });
         }

@@ -4,8 +4,6 @@
  * Created by daudiihhdau on 16.12.15.
  */
 
-var pluginPackage = require('./pluginPackage.js');
-
 function PackageCollector()
 {
     var packages = {};

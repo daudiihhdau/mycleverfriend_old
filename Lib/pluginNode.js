@@ -1,7 +1,5 @@
 "use strict";
 
-var packageCollector = require('./packageCollector.js');
-
 /**
  * Created by daudiihhdau on 16.12.15.
  */

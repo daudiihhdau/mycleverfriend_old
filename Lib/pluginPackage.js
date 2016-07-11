@@ -13,7 +13,7 @@ function PluginPackage()
     var direction;
     var dbCollection;
     var properties = {};
-    var reference;
+    var queryReference;
 
     function addDocuments(documents) {
 
@@ -57,11 +57,12 @@ function PluginPackage()
                 if (true == _.has(options.input, 'data')) {
                     addDocuments(options.input.data);
                 }
-                else if (true == _.has(options.input, 'linked')) {
+                else if (true == _.has(options.input, 'query')) {
 
                     if ('In' != direction) throw new Error('linked package must be input package');
 
-                    reference = options.linked ? options.linked : undefined;
+                    queryReference = options.input.linked ? options.input.linked : undefined;
+                    console.log('####' + queryReference);
                 }
             }
 
@@ -84,10 +85,10 @@ function PluginPackage()
             return false; // todo: return correct value
         },
         hasReference: function () {
-            return reference ? true : false;
+            return queryReference ? true : false;
         },
         getReference: function () {
-            return reference;
+            return queryReference;
         },
         getDocuments: function () {
             return dbCollection.data;

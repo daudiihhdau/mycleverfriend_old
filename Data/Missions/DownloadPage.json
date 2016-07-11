@@ -14,11 +14,25 @@
     "input": {
       "urlInfo": {
         "data": [{
-          "url": "http://www.saturn.de/de/category/_waschmaschinen-475965.html"
+          "url": "http://www.spiegel.de/schlagzeilen/"
         },
         {
-          "url": "http://www.saturn.de/de/product/_gorenje-wa-7439-sat1-2066436.html"
+          "url": "http://www.spiegel.de/schlagzeilen/tops/index.html"
         }]
+      }
+    }
+  },
+  {
+    "id": 1,
+    "name": "CssSelector",
+    "version": "1.0.0.1",
+    "input": {
+      "htmlCode": {
+        "query": {
+          "plugin": 0,
+          "package": "htmlOutput",
+          "keys": "html"
+        }
       }
     }
   }]
