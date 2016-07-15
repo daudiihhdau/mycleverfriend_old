@@ -1,34 +1,57 @@
 "use strict";
 
-/**
- * Created by daudiihhdau on 16.12.15.
- */
+var DbProxy = require('./dbProxy.js');
 
 //https://blog.risingstack.com/fundamental-node-js-design-patterns/
 //https://blog.risingstack.com/dependency-injection-in-node-js/
 function Mission()
 {
     var specifications;
+    var pluginNodes;
+    var db;
 
-    //var pluginLoopNode;
-    var pluginProxies;
+
+    function createDbProxy(pluginNodeOn, callback) {
+        console.log('create pluginDbProxy for plugin: ' + pluginNodeOn.getName());
+
+        var pluginDbProxy = DbProxy.create({
+            'db': db,
+            'pluginNode': pluginNodeOn
+        });
+
+        return callback(null, pluginNodeOn, pluginDbProxy);
+    }
+
+    function setupDbProxy(pluginNodeOn, pluginDbProxy, callback) {
+        console.log('prepare data for plugin: ' + pluginNodeOn.getName());
+
+        pluginDbProxy.setup(function (err) {
+            if (err) throw err;
+
+            return callback(null, pluginNodeOn, pluginDbProxy);
+        });
+    }
+
+    function startPlugin(pluginNodeOn, pluginDbProxy, callback) {
+        console.log('start plugin: ' + pluginNodeOn.getName());
+
+        pluginNodeOn.start(pluginDbProxy, function(err) {
+            if (err) throw err;
+
+            return callback(null);
+        });
+    }
+
 
     return {
         init: function (options) {
-
-            if (!options.specifications) {
-                throw new Error('options.specifications is required');
-            }
-            /*if (!options.pluginLoopNode) {
-                throw new Error('options.pluginLoopNode is required');
-            }*/
-            if (!options.pluginProxies) {
-                throw new Error('options.pluginProxies is required');
-            }
+            if (!options.specifications) throw new Error('options.specifications is required');
+            if (!options.pluginProxies) throw new Error('options.pluginNodes is required');
+            if (!options.db) throw new Error('options.db is required');
 
             specifications = options.specifications;
-            //pluginLoopNode = options.pluginLoopNode;
-            pluginProxies = options.pluginProxies;
+            pluginNodes = options.pluginProxies;
+            db = options.db;
 
             return this;
         },
@@ -49,25 +72,25 @@ function Mission()
         },
         getPlugins: function () {
             // pluginLoopNode
-            return pluginProxies;
+            return pluginNodes;
         },
         start : function (callback) {
-
             console.log("Trying to start the mission.");
 
-            _.each(pluginProxies, function(pluginProxyOn) {
-                console.log('starte plugin: ' + pluginProxyOn.getName());
+            _.each(pluginNodes, function(pluginNodeOn) {
 
-                // todo: prepare package values (queryReferences)
-
-                pluginProxyOn.start(callback);
+                async.waterfall([
+                    function(callback) { return callback(null, pluginNodeOn) },
+                    createDbProxy,
+                    setupDbProxy,
+                    startPlugin,
+                ], function (err) { if (err) throw err; return callback(null) });
             });
         }
     }
 }
 
-function create(options)
-{
+function create(options) {
     return new Mission().init(options);
 }
 

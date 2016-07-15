@@ -8,22 +8,15 @@ var helper = require('./helper.js');
 
 function PluginPackage()
 {
+    var uniqueId;
     var name;
     var description;
     var direction;
-    var dbCollection;
     var properties = {};
-    var queryReference;
+    var inputData = {};
+    var queryReferences;
 
-    function addDocuments(documents) {
-
-        _.each(documents, function(documentOn) {
-            addDocument(documentOn)
-        });
-    }
-
-    function addDocument(document) {
-
+    function cleanupInputDocument(document) {
         document = helper.convertKeysToLowerCase(document);
 
         // ignore invalid elements
@@ -31,10 +24,9 @@ function PluginPackage()
 
         // ignore all elements with missing elements
         if (_.size(cleanedDocument) == _.size(properties)) {
-            dbCollection.insert(cleanedDocument);
+            return null;
         }
-
-        // todo: write to error log
+        return cleanedDocument;
     }
 
     return {
@@ -43,61 +35,54 @@ function PluginPackage()
             if (!options.name) throw new Error('options.name is required');
             if (!options.direction) throw new Error('options.direction is required');
             if (!options.description) throw new Error('options.description is required');
-            if (!options.dbCollection) throw new Error('options.dbCollection is required');
             if (!options.properties) throw new Error('options.properties is required');
 
+            //uniqueId = guid();
             name = options.name;
             direction = options.direction;
             description = options.description;
-            dbCollection = options.dbCollection;
-            properties = options.properties;
+            properties = options.properties
 
-            if (options.input) {
-
-                if (true == _.has(options.input, 'data')) {
-                    addDocuments(options.input.data);
-                }
-                else if (true == _.has(options.input, 'query')) {
-
-                    if ('In' != direction) throw new Error('linked package must be input package');
-
-                    queryReference = options.input.linked ? options.input.linked : undefined;
-                    console.log('####' + queryReference);
-                }
+            if (true == _.has(options.input, 'data')) {
+                inputData = options.input.data;
             }
 
-            dbCollection.on("pre-insert", function (data) {
-                //console.log(data);
-            })
+            if (true == _.has(options.input, 'linked')) {
+
+                if ('In' != direction) throw new Error('linked package must be input package');
+                if (inputData) throw new Error('linked package: inputData should be empty');
+
+                queryReferences = options.linked;
+            }
 
             return this;
         },
+        getUniqueId: function () {
+            return name + '_' + uniqueId;
+        },
         getName: function () {
-            return name;
+            return name.toLowerCase();
         },
         getDirection: function () {
-            return direction.toLocaleLowerCase();
+            return direction.toLowerCase();
         },
         getDescription: function () {
             return description;
         },
-        isSoftPackage: function () {
-            return false; // todo: return correct value
+        hasInputData: function () {
+            return inputData ? true : false;
+        },
+        getInputData: function () {
+            return inputData;
         },
         hasReference: function () {
-            return queryReference ? true : false;
+            return queryReferences ? true : false;
         },
-        getReference: function () {
-            return queryReference;
+        getReferences: function () {
+            return queryReferences;
         },
-        getDocuments: function () {
-            return dbCollection.data;
-        },
-        addDocument: function (document) {
-            addDocument(document);
-        },
-        addDocuments: function (documents) {
-            addDocuments(documents);
+        cleanupInputDocument: function (document) {
+            return cleanupInputDocument(document);
         }
     }
 };

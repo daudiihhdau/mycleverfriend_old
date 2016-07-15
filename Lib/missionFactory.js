@@ -41,7 +41,6 @@ function MissionFactory()
     function createPlugins(missionJsonObj, callback) {
 
         async.map(missionJsonObj.plugins, pluginFactory.createPlugin, function(err, pluginNodes) {
-
             if (err) throw err;
 
             return callback(null, missionJsonObj, pluginNodes);
@@ -52,8 +51,8 @@ function MissionFactory()
 
         var missionObj = mission.create({
             'specifications': missionJsonObj.specifications,
-            //'pluginLoopNode': createPluginLoopNodes(pluginModules)
-            'pluginProxies': pluginNodes
+            'pluginProxies': pluginNodes,
+            'db': db
         });
         return callback(null, missionObj);
     }

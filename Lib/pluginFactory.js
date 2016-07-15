@@ -3,13 +3,10 @@
 var pluginNode = require('./pluginNode.js');
 var pluginPackage = require('./pluginPackage.js');
 var packageProperty = require('./packageProperty.js');
-var packageCollector = require('./packageCollector.js');
 var helper = require('./helper.js');
 
 function PluginFactory()
 {
-    var db;
-
     function isModuleAvailable(name) {
         try {
             return require.resolve(name)
@@ -37,7 +34,7 @@ function PluginFactory()
         plugin.packageDefinitions = helper.convertKeysToLowerCase(plugin.packageDefinitions);
         pluginJsonObj.input = helper.convertKeysToLowerCase(pluginJsonObj.input);
 
-        // save the key of the packageDefinition as value
+        // save the key of the packageDefinition as "name"-value
         _.each( plugin.packageDefinitions, function(packageOn, packageNameOn) {
             packageOn.name = packageNameOn.toLowerCase();
         });
@@ -101,19 +98,12 @@ function PluginFactory()
 
     function buildPackage(packageDefinitionOn, callback) {
 
-        packageDefinitionOn.dbCollection = db.addCollection(packageDefinitionOn.name);
-
         return callback(null, pluginPackage.create(packageDefinitionOn));
     }
 
-    function createPackageCollector(pluginDefinition, packages, callback) {
+    function createPlugin(pluginDefinition, packages, callback) {
 
-        return callback(null, pluginDefinition, packageCollector.create({ 'packages':  packages }));
-    }
-
-    function createPlugin(pluginDefinition, packageCollector, callback) {
-
-        pluginDefinition.packageCollection = packageCollector;
+        pluginDefinition.packages = packages;
         pluginDefinition.parent = 'test'; //todo: this should be a pluginLoopNode
 
         return callback(null, pluginNode.create(pluginDefinition));
@@ -121,10 +111,6 @@ function PluginFactory()
 
     return {
         init: function (options) {
-
-            if (!options.db) throw new Error('options.db is required');
-
-            db = options.db;
 
             return this;
         },
@@ -134,7 +120,6 @@ function PluginFactory()
                 function(cb) { return cb(null, pluginJsonObj) },
                 loadPluginFile,
                 createPackages,
-                createPackageCollector,
                 createPlugin
             ], function (err, plugin) {
 

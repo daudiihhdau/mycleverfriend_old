@@ -35,7 +35,7 @@ server.route({
             mission.start(function (err) {
                 if (err) throw reply(err);
 
-                reply(mission.getPlugins()[0].getPackages().getByDirection("Out")[0].getDocuments());
+                reply(mission.getPlugins()[0].getPackagesByDirection("Out")[0].getDocuments());
             })
         });
     }

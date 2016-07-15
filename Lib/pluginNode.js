@@ -17,31 +17,64 @@ function PluginNode()
     var license;
     var version;
     var pluginProxy;
-    var packageCollection;
+    var packages = {};
+
+    function getPackageByName(packageName) {
+
+        if (!packageName) throw Error("Missing package definitions.");
+        packageName = packageName.toLowerCase();
+
+        if (false == _.has(packages, packageName)) throw Error("invalid package name: " + packageName);
+
+        return packages[packageName];
+    }
+
+    function getPackagesByDirection(direction) {
+
+        if (!direction) throw Error("Missing package direction");
+        direction = direction.toLowerCase();
+
+        if (direction !== 'in' && direction !== 'out') throw new Error('package direction must be: IN or OUT, given: ' + direction);
+
+        var foundPackages = [];
+        _.each(packages, function(packageOn) {
+            if (packageOn.getDirection() == direction) foundPackages.push(packageOn);
+        });
+        return foundPackages;
+    }
+
+    function getPackagesWithReference() {
+
+        var foundPackages = [];
+        _.each(getPackages('IN'), function(packageOn) {
+            if (true == packageOn.hasReference()) foundPackages.push(packageOn);
+        });
+        return foundPackages;
+    }
 
     return {
         init: function(options) {
 
             // todo: check is number? (test: "is not existing" gives wrong answers using pluginId = 0)
             if (id in options) throw new Error('options.id is required');
+            if (!options.parent) throw new Error('options.parent is required');
             if (!options.name) throw new Error('options.name is required');
             if (!options.description) throw new Error('options.description is required');
             if (!options.author) throw new Error('options.author is required');
             if (!options.license) throw new Error('options.license is required');
             if (!options.version) throw new Error('options.version is required');
             if (!options.work) throw new Error('options.work is required');
-            if (!options.parent) throw new Error('options.parent is required');
-            if (!options.packageCollection) throw new Error('options.packageCollection is required');
+            if (!options.packages) throw new Error('options.packages is required');
 
             id = options.id;
+            parent = options.parent;
             name = options.name;
             description = options.description;
             author = options.author;
             license = options.license;
             version = options.version;
             pluginProxy = options.work;
-            parent = options.parent;
-            packageCollection = options.packageCollection;
+            packages = options.packages;
 
             return this;
         },
@@ -52,7 +85,7 @@ function PluginNode()
             return parent;
         },
         getName: function() {
-            return name;
+            return name.toLowerCase();
         },
         getVersion: function() {
             return version;
@@ -60,14 +93,17 @@ function PluginNode()
         getPath: function() {
             return getPluginPath();
         },
-        getPackages: function() {
-            return packageCollection;
+        getPackageByName: function(packageName) {
+            return getPackageByName(packageName);
         },
-        start: function(callback) {
-            pluginProxy(packageCollection, callback);
-            return this;
+        getPackagesByDirection: function(direction) {
+            return getPackagesByDirection(direction);
         },
-        reset: function() {
+        getPackagesWithReference: function () {
+            return getPackagesWithReference();
+        },
+        start: function(dbProxy, callback) {
+            pluginProxy(dbProxy, callback);
             return this;
         }
     }

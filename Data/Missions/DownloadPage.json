@@ -28,11 +28,11 @@
     "version": "1.0.0.1",
     "input": {
       "htmlCode": {
-        "query": {
+        "queries": [{
           "plugin": 0,
           "package": "htmlOutput",
           "keys": "html"
-        }
+        }]
       }
     }
   }]
