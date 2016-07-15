@@ -13,12 +13,15 @@ function PackageCollector()
         if (!direction) throw Error("Missing package direction");
         direction = direction.toLowerCase();
 
+        if (direction !== 'in' || direction !== 'out') throw new Error('package direction must be: IN or OUT');
+
         var foundPackages = [];
-        _.each(packages, function(inputDataOn, inputPackageNameOn) {
-            if (packages[inputPackageNameOn].getDirection() == direction) foundPackages.push(packages[inputPackageNameOn]);
+        _.each(packages, function(packageOn) {
+            if (packageOn.getDirection() == direction) foundPackages.push(packageOn);
         });
         return foundPackages;
     }
+
 
     function add(packageName, newDocument) {
 
