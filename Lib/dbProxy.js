@@ -1,18 +1,10 @@
 "use strict";
 
-/*
-verwaltet alle DB
-
-stellt richtig gefüllte Packages zur Verfügungs
- kann Verknüpfungen auflösen
- */
-
 function DbProxy()
 {
     var db;
-    var pluginNode;
 
-    function setup(callback) {
+    function createPluginSlot(pluginNode, callback) {
 
         var packages = pluginNode.getPackagesByDirection('IN');
         async.map(packages,
@@ -34,7 +26,7 @@ function DbProxy()
                 if (err) throw err;
 
                 return callback(null);
-        });
+            });
     }
 
     function addDocument(packageName, document) {
@@ -55,28 +47,21 @@ function DbProxy()
     }
 
     return {
-        init: function (options, callback) {
+        init: function (options) {
 
             if (!options.db) throw new Error('options.db is required');
-            if (!options.pluginNode) throw new Error('options.pluginNode is required');
+            // TODO: is db a valid database? (having all needed methods - duck typing)
 
             db = options.db;
-            pluginNode = options.pluginNode;
 
             return this;
         },
-        setup: function (callback) {
-            return setup(callback);
+        prepareData: function (pluginNodeOn, callback) {
+            return createPluginSlot(pluginNodeOn, callback);
         },
-        get: function (packageName) {
-            return db.getCollection(packageName).data;
-        },
-        add: function (packageName, document) {
-            addDocument(packageName, document);
-        }/*,
-        addBulk: function (packageName, documents) {
-            addDocuments(packageName, documents);
-        }*/
+        saveData: function (pluginNode, packageName) {
+            return db.get();
+        }
     }
 }
 

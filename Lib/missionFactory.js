@@ -23,7 +23,6 @@ var PluginFactory = require('./pluginFactory.js');
 
 function MissionFactory()
 {
-    var db;
     var filePath;
     var pluginFactory;
 
@@ -51,8 +50,7 @@ function MissionFactory()
 
         var missionObj = mission.create({
             'specifications': missionJsonObj.specifications,
-            'pluginProxies': pluginNodes,
-            'db': db
+            'pluginProxies': pluginNodes
         });
         return callback(null, missionObj);
     }
@@ -60,12 +58,10 @@ function MissionFactory()
     return {
         init: function (options) {
 
-            if (!options.db) throw new Error('options.db is required');
             if (!options.filePath) throw new Error('options.filePath is required');
 
-            db = options.db;
             filePath = options.filePath;
-            pluginFactory = new PluginFactory.create({ 'db': options.db });
+            pluginFactory = new PluginFactory.create();
 
             return this;
         },

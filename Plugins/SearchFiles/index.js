@@ -24,15 +24,14 @@ module.exports.packageDefinitions = {
 };
 
 module.exports.work = function(packages, callback) {
-    console.log(packages.get("paths"));
 
-    async.map(packages.get("paths"), getFiles, callback);
+    async.map(packages['paths'], getFiles, callback);
 
     function getFiles(itemOn, callback) {
                 fs.readdir(itemOn.path, function (err, filePaths) {
             if (err) throw err;
 
-            packages.add("foundFiles", { filename: filePaths });
+            packages['foundFiles'].push('{ filename: filePaths }');
             return callback();
         });
     }

@@ -2,6 +2,7 @@
 
 const Hapi = require('hapi');
 var myCleverFriend = require('./Lib');
+var lokijsProxy = require('./Lib/DB/lokijsProxy.js');
 
 const server = new Hapi.Server();
 server.connection({
@@ -32,10 +33,11 @@ server.route({
             console.log(mission.getPlugins()[0].getPackages().getByDirection("Out")[0].getName());
             console.log(mission.getPlugins()[0].getPackages().getByDirection("Out")[0].getDocuments());*/
 
-            mission.start(function (err) {
+            mission.start(dbProxy.create(), function (err, resultSet) {
                 if (err) throw reply(err);
 
-                reply(mission.getPlugins()[0].getPackagesByDirection("Out")[0].getDocuments());
+                reply(resultSet);
+                //reply(mission.getPlugins()[0].getPackagesByDirection("Out")[0].getDocuments());
             })
         });
     }

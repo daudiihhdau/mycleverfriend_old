@@ -111,7 +111,6 @@ function PluginFactory()
 
     return {
         init: function (options) {
-
             return this;
         },
         createPlugin: function (pluginJsonObj, callback) {
