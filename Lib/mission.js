@@ -1,11 +1,22 @@
 "use strict";
 
+var DBProxy = require('./dbProxy.js');
+
 //https://blog.risingstack.com/fundamental-node-js-design-patterns/
 //https://blog.risingstack.com/dependency-injection-in-node-js/
 function Mission()
 {
     var specifications;
     var pluginNodes;
+
+    function startPlugin(pluginNode, packages, callback) {
+
+        pluginNode.start(packages, function (err) {
+            if (err) return callback(new Error(err));
+
+            return callback(err, pluginNode, packages)
+        })
+    }
 
     return {
         init: function (options) {
@@ -36,8 +47,10 @@ function Mission()
             // pluginLoopNode
             return pluginNodes;
         },
-        start : function (dbProxy, callback) {
-            if (!options.dbProxy) throw new Error('options.dbProxy is required');
+        start : function (options, callback) {
+            if (!options.db) throw new Error('options.db is required');
+
+            var dbProxy = new DBProxy.create({ 'db': options.db });
 
             console.log("Trying to start the mission.");
 

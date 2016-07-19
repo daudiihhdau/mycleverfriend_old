@@ -14,7 +14,7 @@ module.exports.packageDefinitions = {
             path: { type: "path", description: "Path where you like to search the expected files." }
         }
     },
-    foundFiles: {
+    foundfiles: {
         direction: "Out",
         description: "Defines all found files with the expected data.",
         properties: {
@@ -28,10 +28,10 @@ module.exports.work = function(packages, callback) {
     async.map(packages['paths'], getFiles, callback);
 
     function getFiles(itemOn, callback) {
-                fs.readdir(itemOn.path, function (err, filePaths) {
+        fs.readdir(itemOn.path, function (err, filePaths) {
             if (err) throw err;
 
-            packages['foundFiles'].push('{ filename: filePaths }');
+            packages['foundfiles'].push({ 'filename': filePaths });
             return callback();
         });
     }

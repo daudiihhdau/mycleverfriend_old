@@ -46,6 +46,7 @@ function PluginFactory()
 
         // merge plugin and his package-json data
         var pluginDefinition = _.extend(plugin, pluginPackage);
+        pluginDefinition.id = pluginJsonObj.id;
 
         return callback(null, pluginDefinition);
     }

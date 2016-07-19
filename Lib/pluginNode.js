@@ -68,7 +68,7 @@ function PluginNode()
 
             id = options.id;
             parent = options.parent;
-            name = options.name;
+            name = options.name.toLowerCase();
             description = options.description;
             author = options.author;
             license = options.license;
@@ -81,17 +81,23 @@ function PluginNode()
         getId: function() {
             return id;
         },
+        getUniqueId: function() {
+            return id + '_' + name;
+        },
         getParent: function() {
             return parent;
         },
         getName: function() {
-            return name.toLowerCase();
+            return name;
         },
         getVersion: function() {
             return version;
         },
         getPath: function() {
             return getPluginPath();
+        },
+        getPackages: function() {
+            return packages;
         },
         getPackageByName: function(packageName) {
             return getPackageByName(packageName);

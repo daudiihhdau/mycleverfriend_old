@@ -23,7 +23,7 @@ function PluginPackage()
         var cleanedDocument = _.pick(document, _.keys(properties));
 
         // ignore all elements with missing elements
-        if (_.size(cleanedDocument) == _.size(properties)) {
+        if (_.size(cleanedDocument) != _.size(properties)) {
             return null;
         }
         return cleanedDocument;

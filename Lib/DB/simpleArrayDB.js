@@ -2,17 +2,24 @@
 
 function SimpleArrayDB()
 {
-    var db = {};
+    var db = [];
 
     return {
         init: function () {
             return this;
         },
-        get: function (packageName) {
-            return db[packageName];
+        create: function (pluginID, packageName) {
+            if (false == (pluginID in db)) {
+                db[pluginID] = [];
+            }
+
+            return db[pluginID][packageName] = [];
         },
-        add: function (packageName, document) {
-            db[packageName].push(document);
+        get: function (pluginID) {
+            return db[pluginID];
+        },
+        add: function (pluginID, packageName, documents) {
+            db[pluginID][packageName].push(documents);
         }
     }
 }

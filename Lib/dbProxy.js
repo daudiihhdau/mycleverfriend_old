@@ -4,44 +4,39 @@ function DbProxy()
 {
     var db;
 
-    function createPluginSlot(pluginNode, callback) {
+    function createPackageSlots(pluginNode, callback) {
 
-        var packages = pluginNode.getPackagesByDirection('IN');
-        async.map(packages,
-            function (packageOn, callback) {
-
-                var packageDbCollection = db.addCollection(packageOn.getName());
-
-                if (true == packageOn.hasReference()) {
-                    throw new Error('TODO!!');
-                }
-
-                if (true == packageOn.hasInputData()) {
-                    addDocuments(packageOn.getName(), packageOn.getInputData());
-                }
-
-                return callback(null, packageDbCollection);
-            },
-            function(err) {
-                if (err) throw err;
-
-                return callback(null);
-            });
+        var packages = pluginNode.getPackages();
+        _.each(packages, function (packageOn) {
+            db.create(pluginNode.getUniqueId(), packageOn.getName())
+        });
+        callback(null, pluginNode);
     }
 
-    function addDocument(packageName, document) {
+    function loadInputData(pluginNode, callback) {
+
+        var inputData = [];
+        var packages = pluginNode.getPackagesByDirection('IN');
+        _.each(packages, function (packageOn) {
+            if (true == packageOn.hasInputData()) {
+                addDocuments(pluginNode, packageOn.getName(), packageOn.getInputData());
+            }
+        });
+        callback(null, pluginNode, inputData);
+    }
+
+    function addDocument(pluginNode, packageName, document) {
         var cleanedDocument = pluginNode.getPackageByName(packageName).cleanupInputDocument(document);
 
         if (cleanedDocument) {
-            console.log(cleanedDocument);
-            db.insert(packageName, cleanedDocument);
+            db.add(pluginNode.getUniqueId(), packageName, cleanedDocument);
         }
         return true;
     }
 
-    function addDocuments(packageName, documents) {
+    function addDocuments(pluginNode, packageName, documents) {
         _.each(documents, function(documentOn) {
-            addDocument(packageName, documentOn)
+            addDocument(pluginNode, packageName, documentOn)
         });
         return true;
     }
@@ -57,10 +52,20 @@ function DbProxy()
             return this;
         },
         prepareData: function (pluginNodeOn, callback) {
-            return createPluginSlot(pluginNodeOn, callback);
+
+            async.waterfall([
+                function(callback) { return callback(null, pluginNodeOn) },
+                createPackageSlots,
+                loadInputData,
+            ], function (err, pluginNodeOn) {
+                if (err) throw err;
+                return callback(null, pluginNodeOn, db.get(pluginNodeOn.getUniqueId()))
+            });
         },
-        saveData: function (pluginNode, packageName) {
-            return db.get();
+        saveData: function (pluginNode, packages) {
+
+            //addDocuments
+            return callback(null, pluginNodeOn);;
         }
     }
 }
