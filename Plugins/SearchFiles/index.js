@@ -32,7 +32,7 @@ module.exports.work = function(packages, callback) {
             if (err) throw err;
 
             packages['foundfiles'].push({ 'filename': filePaths });
-            return callback();
+            return callback(err);
         });
     }
 }

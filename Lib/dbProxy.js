@@ -5,40 +5,41 @@ function DbProxy()
     var db;
 
     function createPackageSlots(pluginNode, callback) {
-
         var packages = pluginNode.getPackages();
         _.each(packages, function (packageOn) {
-            db.create(pluginNode.getUniqueId(), packageOn.getName())
+            db.createPackage(pluginNode.getUniqueId(), packageOn.getName())
         });
         callback(null, pluginNode);
     }
 
-    function loadInputData(pluginNode, callback) {
+    function loadInputDocuments(pluginNode, callback) {
+        var packageValues = {};
 
-        var inputData = [];
         var packages = pluginNode.getPackagesByDirection('IN');
         _.each(packages, function (packageOn) {
             if (true == packageOn.hasInputData()) {
-                addDocuments(pluginNode, packageOn.getName(), packageOn.getInputData());
+                packageValues[packageOn.getName()] = packageOn.getInputData();
             }
         });
-        callback(null, pluginNode, inputData);
+        callback(null, pluginNode, packageValues);
     }
 
     function addDocument(pluginNode, packageName, document) {
         var cleanedDocument = pluginNode.getPackageByName(packageName).cleanupInputDocument(document);
 
         if (cleanedDocument) {
-            db.add(pluginNode.getUniqueId(), packageName, cleanedDocument);
+            db.addDocument(pluginNode.getUniqueId(), packageName, cleanedDocument);
         }
         return true;
     }
 
-    function addDocuments(pluginNode, packageName, documents) {
-        _.each(documents, function(documentOn) {
-            addDocument(pluginNode, packageName, documentOn)
+    function addDocuments(pluginNode, packages, callback) {
+        _.each(packages, function (documents, packageNameOn) {
+            _.each(documents, function(documentOn) {
+                addDocument(pluginNode, packageNameOn, documentOn)
+            });
         });
-        return true;
+        callback(null, pluginNode);
     }
 
     return {
@@ -56,16 +57,18 @@ function DbProxy()
             async.waterfall([
                 function(callback) { return callback(null, pluginNodeOn) },
                 createPackageSlots,
-                loadInputData,
+                loadInputDocuments,
+                addDocuments,
             ], function (err, pluginNodeOn) {
                 if (err) throw err;
-                return callback(null, pluginNodeOn, db.get(pluginNodeOn.getUniqueId()))
+                return callback(null, pluginNodeOn, db.getPackages(pluginNodeOn.getUniqueId()))
             });
         },
-        saveData: function (pluginNode, packages) {
-
-            //addDocuments
-            return callback(null, pluginNodeOn);;
+        saveData: function (pluginNode, packages, callback) {
+            addDocuments(pluginNode, packages, callback);
+        },
+        getData: function () {
+            return db.getAll();
         }
     }
 }

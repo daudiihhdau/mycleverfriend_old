@@ -2,7 +2,7 @@
 
 const Hapi = require('hapi');
 var myCleverFriend = require('./Lib');
-var simpleArrayDB = require('./Lib/DB/simpleArrayDB.js');
+var simpleMemoryDB = require('./Lib/DB/simpleMemoryDB.js');
 
 const server = new Hapi.Server();
 server.connection({
@@ -33,8 +33,10 @@ server.route({
             console.log(mission.getPlugins()[0].getPackages().getByDirection("Out")[0].getName());
             console.log(mission.getPlugins()[0].getPackages().getByDirection("Out")[0].getDocuments());*/
 
-            mission.start({ 'db': simpleArrayDB.create() }, function (err, resultSet) {
+            mission.start({ 'db': simpleMemoryDB.create() }, function (err, resultSet) {
                 if (err) throw reply(err);
+
+                console.log(resultSet);
 
                 reply(resultSet);
                 //reply(mission.getPlugins()[0].getPackagesByDirection("Out")[0].getDocuments());

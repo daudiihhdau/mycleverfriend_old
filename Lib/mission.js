@@ -10,7 +10,6 @@ function Mission()
     var pluginNodes;
 
     function startPlugin(pluginNode, packages, callback) {
-
         pluginNode.start(packages, function (err) {
             if (err) return callback(new Error(err));
 
@@ -61,7 +60,7 @@ function Mission()
                     dbProxy.prepareData,
                     startPlugin,
                     dbProxy.saveData,
-                ], function (err) { if (err) throw err; return callback(null, dataSet) });
+                ], function (err) { if (err) throw err; return callback(null, dbProxy.getData()) });
             });
         }
     }
