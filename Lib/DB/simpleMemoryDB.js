@@ -2,7 +2,7 @@
 
 function SimpleMemoryDB()
 {
-    var db = {};
+    var db = [];
 
     return {
         init: function () {
@@ -17,6 +17,9 @@ function SimpleMemoryDB()
         },
         getPackages: function (pluginID) {
             return db[pluginID];
+        },
+        getPackage: function (pluginID, packageName) {
+            return db[pluginID][packageName];
         },
         addDocument: function (pluginID, packageName, document) {
             db[pluginID][packageName].push(document);

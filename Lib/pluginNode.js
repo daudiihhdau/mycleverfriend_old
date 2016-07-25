@@ -81,9 +81,6 @@ function PluginNode()
         getId: function() {
             return id;
         },
-        getUniqueId: function() {
-            return id + '_' + name;
-        },
         getParent: function() {
             return parent;
         },

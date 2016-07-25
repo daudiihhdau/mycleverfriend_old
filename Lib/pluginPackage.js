@@ -14,7 +14,7 @@ function PluginPackage()
     var direction;
     var properties = {};
     var inputData = {};
-    var queryReferences;
+    var queryReference;
 
     function cleanupInputDocument(document) {
         document = helper.convertKeysToLowerCase(document);
@@ -48,11 +48,10 @@ function PluginPackage()
             }
 
             if (true == _.has(options.input, 'linked')) {
-
                 if ('In' != direction) throw new Error('linked package must be input package');
-                if (inputData) throw new Error('linked package: inputData should be empty');
+                if (false == _.isEmpty(inputData)) throw new Error('linked package: inputData should be empty');
 
-                queryReferences = options.linked;
+                queryReference = options.input.linked;
             }
 
             return this;
@@ -70,16 +69,16 @@ function PluginPackage()
             return description;
         },
         hasInputData: function () {
-            return inputData ? true : false;
+            return  (false == _.isEmpty(inputData));
         },
         getInputData: function () {
             return inputData;
         },
         hasReference: function () {
-            return queryReferences ? true : false;
+            return (false == _.isEmpty(queryReference));
         },
-        getReferences: function () {
-            return queryReferences;
+        getReference: function () {
+            return queryReference;
         },
         cleanupInputDocument: function (document) {
             return cleanupInputDocument(document);

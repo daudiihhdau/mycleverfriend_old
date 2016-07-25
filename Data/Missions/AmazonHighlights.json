@@ -16,14 +16,6 @@
         "data": [{
           "numFeedItems": 20,
           "url": "http://www.spiegel.de/schlagzeilen/index.rss"
-        },
-        {
-          "numFeedItems": 20,
-          "url": "http://www.amazon.de/gp/rss/bestsellers/books/166024031/ref=zg_bs_166024031_rsslink"
-        },
-        {
-          "numFeedItems": 20,
-          "url": "http://newsfeed.zeit.de/index"
         }]
       }
     }
@@ -43,8 +35,8 @@
       },
       "feedItems": {
         "linked": {
-          "plugin": 0,
-          "package": "RSSOutput"
+          "pluginId": 0,
+          "packageName": "RSSOutput"
         }
       }
     }

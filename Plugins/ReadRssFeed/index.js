@@ -29,15 +29,15 @@ module.exports.packageDefinitions = {
 
 module.exports.work = function(packages, callback) {
 
-    async.map(packages.get("urlInfo"), readFeed, callback);
+    async.map(packages['urlinfo'], readFeed, callback);
 
     function readFeed(itemOn, callback) {
 
-        feedReader(itemOn.url, function (err, articles) {
+        feedReader(itemOn.url, function (err, articleOn) {
             if (err) throw err;
 
-            packages.add("rssOutput", articles);
-            return callback();
+            packages['rssoutput'].push(articleOn);
+            return callback(err, packages);
         });
     }
 }

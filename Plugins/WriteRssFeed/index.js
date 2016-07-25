@@ -28,13 +28,10 @@ module.exports.packageDefinitions = {
 
 module.exports.work = function(packages, callback) {
 
-    _.each(packages.get("feedChannel"), function(feedChannelOn) {
+    _.each(packages['feedchannel'], function(feedChannelOn) {
 
         var feed = new feedWriter(feedChannelOn);
-
-        console.log(packages.get("feedItems"));
-
-        _.each(packages.get("feedItems"), function(feedItemOn) {
+        _.each(packages['feeditems'], function(feedItemOn) {
             feed.addItem(feedItemOn);
         });
 

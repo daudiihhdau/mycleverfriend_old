@@ -31,8 +31,11 @@ module.exports.work = function(packages, callback) {
         fs.readdir(itemOn.path, function (err, filePaths) {
             if (err) throw err;
 
-            packages['foundfiles'].push({ 'filename': filePaths });
-            return callback(err);
+            _.each(filePaths, function (filePathOn) {
+                packages['foundfiles'].push({ 'filename': filePathOn });
+            });
+
+            return callback(err, packages);
         });
     }
 }

@@ -36,8 +36,6 @@ server.route({
             mission.start({ 'db': simpleMemoryDB.create() }, function (err, resultSet) {
                 if (err) throw reply(err);
 
-                console.log(resultSet);
-
                 reply(resultSet);
                 //reply(mission.getPlugins()[0].getPackagesByDirection("Out")[0].getDocuments());
             })

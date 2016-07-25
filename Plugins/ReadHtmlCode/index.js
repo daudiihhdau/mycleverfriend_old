@@ -26,14 +26,14 @@ module.exports.packageDefinitions = {
 
 module.exports.work = function(packages, callback) {
 
-    async.map(packages.get("urlInfo"), readHTMLSource, callback);
+    async.map(packages.get("urlinfo"), readHTMLSource, callback);
 
     function readHTMLSource(itemOn, callback) {
 
         request(itemOn.url, function(error, response, body) {
             if (error) throw error;
 
-            packages.add("htmlOutput", { 'url': itemOn.url, 'status': response.statusCode, 'html': body });
+            packages.add("htmloutput", { 'url': itemOn.url, 'status': response.statusCode, 'html': body });
             return callback();
         });
     }

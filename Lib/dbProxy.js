@@ -7,7 +7,7 @@ function DbProxy()
     function createPackages(pluginNode, callback) {
         var packages = pluginNode.getPackages();
         _.each(packages, function (packageOn) {
-            db.createPackage(pluginNode.getUniqueId(), packageOn.getName())
+            db.createPackage(pluginNode.getId(), packageOn.getName())
         });
         callback(null, pluginNode);
     }
@@ -24,11 +24,26 @@ function DbProxy()
         callback(null, pluginNode, packageValues);
     }
 
+    function loadReferenceData(pluginNode, callback) {
+        var packageValues = {};
+
+        var packages = pluginNode.getPackagesByDirection('IN');
+        _.each(packages, function (packageOn) {
+            if (true == packageOn.hasReference()) {
+                var packageReference = packageOn.getReference();
+                packageValues[packageOn.getName()] = db.getPackage(packageReference.pluginId, packageReference.packageName.toLowerCase());
+            }
+        });
+        //console.log(packageValues);
+
+        callback(null, pluginNode, packageValues);
+    }
+
     function addDocument(pluginNode, packageName, document) {
         var cleanedDocument = pluginNode.getPackageByName(packageName).cleanupInputDocument(document);
 
         if (cleanedDocument) {
-            db.addDocument(pluginNode.getUniqueId(), packageName, cleanedDocument);
+            db.addDocument(pluginNode.getId(), packageName, cleanedDocument);
         }
         return true;
     }
@@ -59,13 +74,18 @@ function DbProxy()
                 createPackages,
                 loadInputDocuments,
                 addDocuments,
+                loadReferenceData,
+                addDocuments,
             ], function (err, pluginNodeOn) {
                 if (err) throw err;
-                return callback(null, pluginNodeOn, db.getPackages(pluginNodeOn.getUniqueId()))
+                return callback(null, pluginNodeOn, db.getPackages(pluginNodeOn.getId()))
             });
         },
         saveData: function (pluginNode, packages, callback) {
-            return callback(null, pluginNode);
+            // TODO: validate data and package name
+            addDocuments(pluginNode, packages, callback);
+
+            //return callback(null, pluginNode);
         },
         getData: function () {
             return db.getAll();
