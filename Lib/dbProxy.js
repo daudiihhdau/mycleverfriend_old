@@ -4,7 +4,7 @@ function DbProxy()
 {
     var db;
 
-    function createPackageSlots(pluginNode, callback) {
+    function createPackages(pluginNode, callback) {
         var packages = pluginNode.getPackages();
         _.each(packages, function (packageOn) {
             db.createPackage(pluginNode.getUniqueId(), packageOn.getName())
@@ -56,7 +56,7 @@ function DbProxy()
 
             async.waterfall([
                 function(callback) { return callback(null, pluginNodeOn) },
-                createPackageSlots,
+                createPackages,
                 loadInputDocuments,
                 addDocuments,
             ], function (err, pluginNodeOn) {
@@ -65,7 +65,7 @@ function DbProxy()
             });
         },
         saveData: function (pluginNode, packages, callback) {
-            addDocuments(pluginNode, packages, callback);
+            return callback(null, pluginNode);
         },
         getData: function () {
             return db.getAll();
