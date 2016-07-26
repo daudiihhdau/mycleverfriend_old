@@ -33,22 +33,19 @@ function PluginPackage()
         init: function (options) {
 
             if (!options.name) throw new Error('options.name is required');
-            if (!options.direction) throw new Error('options.direction is required');
             if (!options.description) throw new Error('options.description is required');
             if (!options.properties) throw new Error('options.properties is required');
 
             //uniqueId = guid();
             name = options.name;
-            direction = options.direction;
             description = options.description;
-            properties = options.properties
+            properties = options.properties;
 
             if (true == _.has(options.input, 'data')) {
                 inputData = options.input.data;
             }
 
             if (true == _.has(options.input, 'linked')) {
-                if ('In' != direction) throw new Error('linked package must be input package');
                 if (false == _.isEmpty(inputData)) throw new Error('linked package: inputData should be empty');
 
                 queryReference = options.input.linked;

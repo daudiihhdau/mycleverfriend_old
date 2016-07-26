@@ -26,14 +26,6 @@
     "version": "1.0.0.1",
     "input": {
       "feedChannel": {
-        "data": [
-          {
-            "title": "I love data!",
-            "description": "Alles über Daten",
-            "link": "http://www.test.de"
-          }]
-      },
-      "feedItems": {
         "linked": {
           "pluginId": 0,
           "packageName": "RSSOutput"

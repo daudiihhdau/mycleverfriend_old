@@ -5,7 +5,7 @@
  */
 var request = require("request");
 
-module.exports.packageDefinitions = {
+module.exports.packages = {
     urlInfo: {
         direction: "In",
         description: "Defines the url of the website, you like to download.",

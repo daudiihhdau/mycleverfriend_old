@@ -15,11 +15,11 @@ function SimpleMemoryDB()
 
             return db[pluginID][packageName] = [];
         },
-        getPackages: function (pluginID) {
-            return db[pluginID];
-        },
         getPackage: function (pluginID, packageName) {
             return db[pluginID][packageName];
+        },
+        getPackages: function (pluginID) {
+            return db[pluginID];
         },
         addDocument: function (pluginID, packageName, document) {
             db[pluginID][packageName].push(document);

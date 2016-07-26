@@ -17,16 +17,20 @@ function PluginNode()
     var license;
     var version;
     var pluginProxy;
-    var packages = {};
+    var packages = {
+        input: {},
+        output: {}
+    };
 
     function getPackageByName(packageName) {
 
         if (!packageName) throw Error("Missing package definitions.");
         packageName = packageName.toLowerCase();
 
-        if (false == _.has(packages, packageName)) throw Error("invalid package name: " + packageName);
+        if (true == _.has(packages.input, packageName)) return packages.input[packageName];
+        if (true == _.has(packages.output, packageName)) return packages.output[packageName];
 
-        return packages[packageName];
+        throw Error("invalid package name: " + packageName);
     }
 
     function getPackagesByDirection(direction) {
@@ -34,20 +38,16 @@ function PluginNode()
         if (!direction) throw Error("Missing package direction");
         direction = direction.toLowerCase();
 
-        if (direction !== 'in' && direction !== 'out') throw new Error('package direction must be: IN or OUT, given: ' + direction);
+        if (direction !== 'input' && direction !== 'output') throw new Error('package direction must be: "input" or "output", given: ' + direction);
 
-        var foundPackages = [];
-        _.each(packages, function(packageOn) {
-            if (packageOn.getDirection() == direction) foundPackages.push(packageOn);
-        });
-        return foundPackages;
+        return packages[direction];
     }
 
     function getPackagesWithReference() {
 
         var foundPackages = [];
-        _.each(getPackages('IN'), function(packageOn) {
-            if (true == packageOn.hasReference()) foundPackages.push(packageOn);
+        _.each(packages.input, function(inputPackageOn) {
+            if (true == inputPackageOn.hasReference()) foundPackages.push(packageOn);
         });
         return foundPackages;
     }

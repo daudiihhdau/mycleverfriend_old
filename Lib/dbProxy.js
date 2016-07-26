@@ -4,62 +4,57 @@ function DbProxy()
 {
     var db;
 
-    function createPackages(pluginNode, callback) {
+    function createPackageCollections(pluginNode, callback) {
         var packages = pluginNode.getPackages();
-        _.each(packages, function (packageOn) {
-            db.createPackage(pluginNode.getId(), packageOn.getName())
-        });
-        callback(null, pluginNode);
-    }
-
-    function loadInputDocuments(pluginNode, callback) {
-        var packageValues = {};
-
-        var packages = pluginNode.getPackagesByDirection('IN');
-        _.each(packages, function (packageOn) {
-            if (true == packageOn.hasInputData()) {
-                packageValues[packageOn.getName()] = packageOn.getInputData();
-            }
-        });
-        callback(null, pluginNode, packageValues);
-    }
-
-    function loadReferenceData(pluginNode, callback) {
-        var packageValues = {};
-
-        var packages = pluginNode.getPackagesByDirection('IN');
-        _.each(packages, function (packageOn) {
-            if (true == packageOn.hasReference()) {
-                var packageReference = packageOn.getReference();
-                packageValues[packageOn.getName()] = db.getPackage(packageReference.pluginId, packageReference.packageName.toLowerCase());
-            }
-        });
-        //console.log(packageValues);
-
-        callback(null, pluginNode, packageValues);
-    }
-
-    function addDocument(pluginNode, packageName, document) {
-        var cleanedDocument = pluginNode.getPackageByName(packageName).cleanupInputDocument(document);
-
-        if (cleanedDocument) {
-            db.addDocument(pluginNode.getId(), packageName, cleanedDocument);
-        }
-        return true;
-    }
-
-    function addDocuments(pluginNode, packages, callback) {
-        _.each(packages, function (documents, packageNameOn) {
-            _.each(documents, function(documentOn) {
-                addDocument(pluginNode, packageNameOn, documentOn)
+        _.each(['input', 'output'], function (directionOn) {
+            _.each(packages[directionOn], function (packageOn) {
+                db.createPackage(pluginNode.getId(), packageOn.getName())
             });
         });
-        callback(null, pluginNode);
+        return callback(null, pluginNode);
+    }
+
+    function loadInputData(packageOn, inputData, callback) {
+        if (true == packageOn.hasInputData()) {
+            inputData = packageOn.getInputData(); //[packageOn.getName()]
+        }
+        return callback(null, packageOn, inputData);
+    }
+
+    function loadLinkedData(packageOn, inputData, callback) {
+        if (true == packageOn.hasReference()) {
+            var packageReference = packageOn.getReference();
+            inputData = db.getPackage(packageReference.pluginId, packageReference.packageName.toLowerCase());
+        }
+        return callback(null, packageOn, inputData);
+    }
+
+    function addDocuments(pluginNode, inputData, callback) {
+        _.each(inputData, function(documents, packageNameOn) {
+            _.each(documents, function(documentOn) {
+                var cleanedDocument = pluginNode.getPackageByName(packageNameOn).cleanupInputDocument(documentOn);
+
+                if (cleanedDocument) {
+                    db.addDocument(pluginNode.getId(), packageNameOn, cleanedDocument);
+                }
+            });
+        });
+        return callback(null, pluginNode, db.getPackages(pluginNode.getId()));
+    }
+
+    function loadInputPackageData(inputPackage, callback) {
+        async.waterfall([
+            function(cb) { return cb(null, inputPackage, {}) },
+            loadInputData,
+            loadLinkedData,
+        ], function (err, inputPackageOn, inputData) {
+            if (err) throw err;
+            return callback(err, inputData);
+        });
     }
 
     return {
         init: function (options) {
-
             if (!options.db) throw new Error('options.db is required');
             // TODO: is db a valid database? (having all needed methods - duck typing)
 
@@ -67,25 +62,17 @@ function DbProxy()
 
             return this;
         },
-        prepareData: function (pluginNodeOn, callback) {
-
-            async.waterfall([
-                function(callback) { return callback(null, pluginNodeOn) },
-                createPackages,
-                loadInputDocuments,
-                addDocuments,
-                loadReferenceData,
-                addDocuments,
-            ], function (err, pluginNodeOn) {
+        createCollections: function (pluginNodeOn, callback) {
+            createPackageCollections(pluginNodeOn, callback);
+        },
+        loadData: function (pluginNodeOn, callback) {
+            async.map(pluginNodeOn.getPackagesByDirection('input'), loadInputPackageData, function (err, inputData) {
                 if (err) throw err;
-                return callback(null, pluginNodeOn, db.getPackages(pluginNodeOn.getId()))
+                addDocuments(pluginNodeOn, inputData, callback);
             });
         },
         saveData: function (pluginNode, packages, callback) {
-            // TODO: validate data and package name
-            addDocuments(pluginNode, packages, callback);
-
-            //return callback(null, pluginNode);
+            addOutputData(pluginNode, packages, callback);
         },
         getData: function () {
             return db.getAll();

@@ -5,7 +5,7 @@
  */
 var cheerio = require('cheerio');
 
-module.exports.packageDefinitions = {
+module.exports.packages = {
     htmlCode: {
         direction: "In",
         description: "Defines the html source you, which you need to select elements.",

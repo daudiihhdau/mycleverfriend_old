@@ -10,6 +10,8 @@ function Mission()
     var pluginNodes;
 
     function startPlugin(pluginNode, packages, callback) {
+        //console.log(packages);
+
         pluginNode.start(packages, function (err) {
             if (err) return callback(new Error(err));
 
@@ -51,16 +53,23 @@ function Mission()
 
             var dbProxy = new DBProxy.create({ 'db': options.db });
 
-            console.log("Trying to start the mission.");
+            console.log("starting mission.");
 
-            _.each(pluginNodes, function(pluginNodeOn) {
+            async.eachSeries(pluginNodes, function (pluginNodeOn, callback) {
+                console.log("starting plugin (" + pluginNodeOn.getId() + "): "+ pluginNodeOn.getName());
 
                 async.waterfall([
                     function(callback) { return callback(null, pluginNodeOn) },
-                    dbProxy.prepareData,
+                    dbProxy.createCollections,
+                    dbProxy.loadData,
                     startPlugin,
                     dbProxy.saveData,
-                ], function (err) { if (err) throw err; return callback(null, dbProxy.getData()) });
+                ], function (err) { if (err) throw err; return callback(null) });
+
+            }, function (err) {
+                if (err) { throw err; }
+                console.log('Well done :-)!');
+                callback(null, dbProxy.getData());
             });
         }
     }
