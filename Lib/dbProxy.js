@@ -4,7 +4,7 @@ function DbProxy()
 {
     var db;
 
-    function createPackageCollections(pluginNode, callback) {
+    function createPackagesDB(pluginNode, callback) {
         var packages = pluginNode.getPackages();
         _.each(['input', 'output'], function (directionOn) {
             _.each(packages[directionOn], function (packageOn) {
@@ -16,7 +16,7 @@ function DbProxy()
 
     function loadInputData(packageOn, inputData, callback) {
         if (true == packageOn.hasInputData()) {
-            inputData = packageOn.getInputData(); //[packageOn.getName()]
+            inputData = packageOn.getInputData();
         }
         return callback(null, packageOn, inputData);
     }
@@ -29,9 +29,9 @@ function DbProxy()
         return callback(null, packageOn, inputData);
     }
 
-    function addDocuments(pluginNode, inputData, callback) {
-        _.each(inputData, function(documents, packageNameOn) {
-            _.each(documents, function(documentOn) {
+    function addDocuments(pluginNode, data, callback) {
+        _.each(data, function (documents, packageNameOn) {
+            _.each(documents, function (documentOn) {
                 var cleanedDocument = pluginNode.getPackageByName(packageNameOn).cleanupInputDocument(documentOn);
 
                 if (cleanedDocument) {
@@ -39,7 +39,7 @@ function DbProxy()
                 }
             });
         });
-        return callback(null, pluginNode, db.getPackages(pluginNode.getId()));
+        return callback(null, pluginNode);
     }
 
     function loadInputPackageData(inputPackage, callback) {
@@ -62,17 +62,26 @@ function DbProxy()
 
             return this;
         },
-        createCollections: function (pluginNodeOn, callback) {
-            createPackageCollections(pluginNodeOn, callback);
+        createPackages: function (pluginNodeOn, callback) {
+            createPackagesDB(pluginNodeOn, callback);
         },
-        loadData: function (pluginNodeOn, callback) {
+        preparePackages: function (pluginNodeOn, callback) {
             async.map(pluginNodeOn.getPackagesByDirection('input'), loadInputPackageData, function (err, inputData) {
                 if (err) throw err;
                 addDocuments(pluginNodeOn, inputData, callback);
             });
         },
-        saveData: function (pluginNode, packages, callback) {
-            addOutputData(pluginNode, packages, callback);
+        getPackages: function (pluginNode, callback) {
+            var packages = { input: {}, output: {}};
+            _.each(['input', 'output'], function(directionOn) {
+                _.each(pluginNode.getPackagesByDirection(directionOn), function(packageOn) {
+                    packages[directionOn][packageOn.getName()] = db.getPackage(pluginNode.getId(), packageOn.getName());
+                });
+            });
+            return callback(null, pluginNode, packages);
+        },
+        savePackages: function (pluginNode, packages, callback) {
+            addDocuments(pluginNode, packages.output, callback);
         },
         getData: function () {
             return db.getAll();

@@ -10,8 +10,6 @@ function Mission()
     var pluginNodes;
 
     function startPlugin(pluginNode, packages, callback) {
-        //console.log(packages);
-
         pluginNode.start(packages, function (err) {
             if (err) return callback(new Error(err));
 
@@ -60,10 +58,11 @@ function Mission()
 
                 async.waterfall([
                     function(callback) { return callback(null, pluginNodeOn) },
-                    dbProxy.createCollections,
-                    dbProxy.loadData,
+                    dbProxy.createPackages,
+                    dbProxy.preparePackages,
+                    dbProxy.getPackages,
                     startPlugin,
-                    dbProxy.saveData,
+                    dbProxy.savePackages,
                 ], function (err) { if (err) throw err; return callback(null) });
 
             }, function (err) {

@@ -35,12 +35,13 @@ module.exports.work = function(packages, callback) {
 
     function readFeed(itemOn, callback) {
 
-        feedReader(itemOn.url, function (err, articleOn) {
+        feedReader(itemOn.url, function (err, articles) {
             if (err) throw err;
 
-            console.log(articleOn);
+            _.each(articles, function (articleOn) {
+                packages.output['rssoutput'].push(articleOn);
+            });
 
-            packages.output['rssoutput'].push(articleOn);
             return callback(err, packages);
         });
     }

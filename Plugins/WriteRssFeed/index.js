@@ -14,18 +14,17 @@ module.exports.packageTypes = {
                 "description":  { "type": "string", "description": "The description of this feed." },
                 "link":         { "type": "url", "description": "Link to the website of this feed." }
             }
-        }
-    },
-    output: {
+        },
         feeditems: {
             "description": "Defines the item data which should written in rss-feed format.",
             "properties": {
                 "title":        { "type": "string", "description": "Headline of the feed item."},
                 "link":         { "type": "url",    "description": "Link to the website of this feed item."},
-                "description":  { "type": "string", "description": "The article/text itself."}
+                "content":  { "type": "string", "description": "The article/text itself."}
             }
         }
-    }
+    },
+    output: {}
 };
 
 module.exports.work = function(packages, callback) {
@@ -33,11 +32,11 @@ module.exports.work = function(packages, callback) {
     _.each(packages.input['feedchannel'], function(feedChannelOn) {
 
         var feed = new feedWriter(feedChannelOn);
-        _.each(packages.output['feeditems'], function(feedItemOn) {
+        _.each(packages.input['feeditems'], function(feedItemOn) {
             feed.addItem(feedItemOn);
         });
 
-        //console.log(feed.render('rss-2.0'))
+        console.log(feed.render('rss-2.0'))
     });
 }
 
