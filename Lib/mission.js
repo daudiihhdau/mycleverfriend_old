@@ -67,7 +67,7 @@ function Mission()
 
             }, function (err) {
                 if (err) { throw err; }
-                console.log('Well done :-)!');
+                console.log('Well done :-)');
                 callback(null, dbProxy.getData());
             });
         }

@@ -9,15 +9,12 @@
   },
   "plugins": [{
     "id": 0,
-    "name": "ReadHtmlCode",
+    "name": "DownloadWebsite",
     "version": "1.0.0.0",
     "input": {
       "urlInfo": {
         "data": [{
-          "url": "http://www.spiegel.de/schlagzeilen/"
-        },
-        {
-          "url": "http://www.spiegel.de/schlagzeilen/tops/index.html"
+          "url": "https://www.r-project.org/foundation/board.html"
         }]
       }
     }

@@ -75,7 +75,8 @@ function DbProxy()
             var packages = { input: {}, output: {}};
             _.each(['input', 'output'], function(directionOn) {
                 _.each(pluginNode.getPackagesByDirection(directionOn), function(packageOn) {
-                    packages[directionOn][packageOn.getName()] = db.getPackage(pluginNode.getId(), packageOn.getName());
+                    // use slice(0) to copy all array elements by value
+                    packages[directionOn][packageOn.getName()] = db.getPackage(pluginNode.getId(), packageOn.getName()).slice(0);
                 });
             });
             return callback(null, pluginNode, packages);

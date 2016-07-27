@@ -37,6 +37,8 @@ module.exports.work = function(packages, callback) {
         });
 
         console.log(feed.render('rss-2.0'))
+
+        return callback(err, packages);
     });
 }
 
