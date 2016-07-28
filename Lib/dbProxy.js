@@ -47,6 +47,7 @@ function DbProxy()
             function(cb) { return cb(null, inputPackage, {}) },
             loadInputData,
             loadLinkedData,
+            //queryLinkedData,
         ], function (err, inputPackageOn, inputData) {
             if (err) throw err;
             return callback(err, inputData);

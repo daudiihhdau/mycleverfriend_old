@@ -10,7 +10,7 @@ module.exports.packageTypes = {
         htmlCode: {
             description: "Defines the html source you, which you need to select elements.",
             properties: {
-                html: { type: "string", description: "HTML Source Code" }
+                sourceCode: { type: "string", description: "HTML Source Code" }
             }
         }
     },
@@ -32,16 +32,16 @@ module.exports.work = function(packages, callback) {
 
     function selectElements(itemOn, callback) {
 
-        var $ = cheerio.load(itemOn.html);
+        var $ = cheerio.load(itemOn.sourcecode);
 
-        $(".entry-title > a").each(function() {
+        $("#spMainContent > div.schlagzeilen-content > div > h2 > a > span.headline").each(function() {
 
-            var link = $(this);
+            var headline = $(this);
 
-            packages.output['selectedelements'].push({ 'key': link.text(), 'value': link.attr("href") });
+            packages.output['selectedelements'].push({ 'key': 'headline', 'value': headline.text() });
         });
 
-        return callback(error, packages);
+        return callback(null, packages);
     }
 }
 

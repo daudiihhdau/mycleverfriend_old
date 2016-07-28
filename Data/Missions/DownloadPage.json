@@ -14,7 +14,7 @@
     "input": {
       "urlInfo": {
         "data": [{
-          "url": "https://www.r-project.org/foundation/board.html"
+          "url": "http://www.spiegel.de/schlagzeilen/tops/index.html"
         }]
       }
     }
@@ -25,11 +25,10 @@
     "version": "1.0.0.1",
     "input": {
       "htmlCode": {
-        "queries": [{
-          "plugin": 0,
-          "package": "htmlOutput",
-          "keys": "html"
-        }]
+        "linked": {
+          "pluginId": 0,
+          "packageName": "downloadInfo"
+        }
       }
     }
   }]
