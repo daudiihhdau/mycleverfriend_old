@@ -19,14 +19,16 @@ function PluginPackage()
     function cleanupInputDocument(document) {
         document = helper.convertKeysToLowerCase(document);
 
-        // ignore invalid elements
-        var cleanedDocument = _.pick(document, _.keys(properties));
-
-        // ignore all elements with missing elements
-        if (_.size(cleanedDocument) != _.size(properties)) {
-            return null;
+        // no properties? than it is a soft package!
+        if(false == (false == _.isEmpty(properties))) {
+            return document;
         }
-        return cleanedDocument;
+
+        // Are all promised properties existing?
+        if (_.every(_.keys(properties), function(keyOn) { return keyOn in document; })) {
+            return document;
+        }
+        return null;
     }
 
     return {
@@ -45,10 +47,10 @@ function PluginPackage()
                 inputData = options.input.data;
             }
 
-            if (true == _.has(options.input, 'linked')) {
-                if (false == _.isEmpty(inputData)) throw new Error('linked package: inputData should be empty');
+            if (true == _.has(options.input, 'query')) {
+                if (false == _.isEmpty(inputData)) throw new Error('linked query package: inputData should be empty');
 
-                queryReference = options.input.linked;
+                queryReference = options.input.query;
             }
 
             return this;
@@ -76,6 +78,9 @@ function PluginPackage()
         },
         getReference: function () {
             return queryReference;
+        },
+        hasProperties: function () {
+            return  (false == _.isEmpty(properties));
         },
         cleanupInputDocument: function (document) {
             return cleanupInputDocument(document);

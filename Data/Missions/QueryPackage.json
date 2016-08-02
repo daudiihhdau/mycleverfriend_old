@@ -14,20 +14,28 @@
     "input": {
       "urlInfo": {
         "data": [{
-          "url": "http://www.spiegel.de/schlagzeilen/tops/index.html"
+          "url": "http://localhost/xing2.json"
         }]
       }
     }
   },
   {
     "id": 1,
-    "name": "CssSelector",
-    "version": "1.0.0.1",
+    "name": "Input2Output",
+    "version": "1.0.0.0",
     "input": {
-      "htmlCode": {
+      "origin": {
         "query": {
           "pluginId": 0,
-          "packageName": "downloadInfo"
+          "packageName": "downloadInfo",
+          "_comment": "$..[?(@.employment_status==='EMPLOYEE')]",
+          "select": "$..user",
+          "types": {
+              "id": "id",
+              "vorname": "first_name",
+              "nachname": "last_name",
+              "employmentStatus": "employment_status"
+          }
         }
       }
     }

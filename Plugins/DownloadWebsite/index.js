@@ -18,10 +18,10 @@ module.exports.packageTypes = {
         downloadInfo: {
             description: "Defines the content of the expected url.",
             properties: {
-                url:            { type:   "url",        description: "URL where you get the html code from." },
-                status:         { type:   "integer",    description: "Response Status Code" },
-                contentType:   {  type:    "string",    description: "Header Response Content Type" },
-                sourceCode:     { type:   "string",     description: "HTML Source Code" }
+                url:            { type:   "url",       description: "URL where you get the html code from." },
+                status:         { type:   "integer",   description: "Response Status Code" },
+                contentType:    { type:   "string",    description: "Header Response Content Type" },
+                sourceCode:     { type:   "string",    description: "HTML Source Code" }
             }
         }
     }
@@ -36,7 +36,14 @@ module.exports.work = function(packages, callback) {
         request(itemOn.url, function(error, response, body) {
             if (error) throw error;
 
-            packages.output['downloadinfo'].push({ 'url': itemOn.url, 'status': response.statusCode, 'contentType': response.headers['content-type'], 'sourceCode': body });
+            var downloadedContent = { 'url': itemOn.url, 'status': response.statusCode, 'contentType': response.headers['content-type'], 'sourceCode': body };
+
+            if (response.headers['content-type'].includes("json")){
+                // merge json to output package
+                downloadedContent = _.extend(downloadedContent, JSON.parse(body));
+            }
+
+            packages.output['downloadinfo'].push(downloadedContent);
 
             return callback(error, packages);
         });

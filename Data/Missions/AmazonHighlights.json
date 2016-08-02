@@ -42,7 +42,7 @@
           }]
       },
       "feedItems": {
-        "linked": {
+        "query": {
           "pluginId": 0,
           "packageName": "RSSOutput"
         }

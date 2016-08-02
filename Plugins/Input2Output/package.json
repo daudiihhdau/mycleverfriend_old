@@ -1,0 +1,11 @@
+{
+  "name": "Input2Output",
+  "version": "0.0.0",
+  "description": "This plugin does nothing! Input Packages equals ouptut packages.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mathias Mielitz",
+  "license": "BSD-2-Clause"
+}

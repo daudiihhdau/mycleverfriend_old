@@ -1,5 +1,7 @@
 "use strict";
 
+var JSONPath = require('JSONPath');
+
 function SimpleMemoryDB()
 {
     var db = [];
@@ -12,7 +14,6 @@ function SimpleMemoryDB()
             if (false == (pluginID in db)) {
                 db[pluginID] = {};
             }
-
             return db[pluginID][packageName] = [];
         },
         getPackage: function (pluginID, packageName) {
@@ -20,6 +21,9 @@ function SimpleMemoryDB()
         },
         getPackages: function (pluginID) {
             return db[pluginID];
+        },
+        queryPackage: function (pluginID, packageName, jqueryPath) {
+            return JSONPath({json: db[pluginID][packageName], path: jqueryPath });
         },
         addDocument: function (pluginID, packageName, document) {
             db[pluginID][packageName].push(document);

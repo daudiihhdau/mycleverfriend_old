@@ -21,10 +21,21 @@ function DbProxy()
         return callback(null, packageOn, inputData);
     }
 
-    function loadLinkedData(packageOn, inputData, callback) {
+    function queryData(packageOn, inputData, callback) {
         if (true == packageOn.hasReference()) {
             var packageReference = packageOn.getReference();
-            inputData = db.getPackage(packageReference.pluginId, packageReference.packageName.toLowerCase());
+
+            var referencedData = db.queryPackage(packageReference.pluginId, packageReference.packageName.toLowerCase(), packageReference.select);
+
+            inputData = _.map(referencedData, function(documentOn){
+                var selectedTypes = _.pick(documentOn, _.values(packageReference.types));
+
+                var result = {};
+                _.each(packageReference.types, function(typeOn, typeName) {
+                    result[typeName] = selectedTypes[typeOn];
+                });
+                return result;
+            });
         }
         return callback(null, packageOn, inputData);
     }
@@ -46,8 +57,7 @@ function DbProxy()
         async.waterfall([
             function(cb) { return cb(null, inputPackage, {}) },
             loadInputData,
-            loadLinkedData,
-            //queryLinkedData,
+            queryData
         ], function (err, inputPackageOn, inputData) {
             if (err) throw err;
             return callback(err, inputData);

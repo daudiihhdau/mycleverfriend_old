@@ -20,7 +20,7 @@ module.exports.packageTypes = {
             "properties": {
                 "title":        { "type": "string", "description": "Headline of the feed item."},
                 "link":         { "type": "url",    "description": "Link to the website of this feed item."},
-                "content":  { "type": "string", "description": "The article/text itself."}
+                "content":      { "type": "string", "description": "The article/text itself."}
             }
         }
     },
@@ -38,7 +38,7 @@ module.exports.work = function(packages, callback) {
 
         console.log(feed.render('rss-2.0'))
 
-        return callback(err, packages);
+        return callback(null, packages);
     });
 }
 
