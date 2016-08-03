@@ -27,7 +27,11 @@
       "htmlCode": {
         "query": {
           "pluginId": 0,
-          "packageName": "downloadInfo"
+          "packageName": "downloadInfo",
+          "select": "$[*]",
+          "types": {
+            "sourceCode": "sourcecode"
+          }
         }
       }
     }

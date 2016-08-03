@@ -44,7 +44,13 @@
       "feedItems": {
         "query": {
           "pluginId": 0,
-          "packageName": "RSSOutput"
+          "packageName": "RSSOutput",
+          "select": "$[*]",
+          "types": {
+            "title": "title",
+            "link": "link",
+            "content": "content"
+          }
         }
       }
     }

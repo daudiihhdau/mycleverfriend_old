@@ -17,10 +17,7 @@ module.exports.packageTypes = {
     output: {
         selectedElements: {
             description: "Key Values of the selected element values",
-            properties: {
-                key: {   type: "url",       description: "URL where you get the html code from." },
-                value: { type: "integer",   description: "Response Status Code" }
-            }
+            properties: {  }
         }
     }
 };
@@ -37,8 +34,7 @@ module.exports.work = function(packages, callback) {
         $("#spMainContent > div.schlagzeilen-content > div > h2 > a > span.headline").each(function() {
 
             var headline = $(this);
-
-            packages.output['selectedelements'].push({ 'key': 'headline', 'value': headline.text() });
+            packages.output['selectedelements'].push({ 'headline': headline.text() });
         });
 
         return callback(null, packages);

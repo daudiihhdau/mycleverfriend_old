@@ -14,7 +14,7 @@
     "input": {
       "urlInfo": {
         "data": [{
-          "url": "http://localhost/xing2.json"
+          "url": "http://localhost/xing.json"
         }]
       }
     }
@@ -28,8 +28,8 @@
         "query": {
           "pluginId": 0,
           "packageName": "downloadInfo",
-          "_comment": "$..[?(@.employment_status==='EMPLOYEE')]",
-          "select": "$..user",
+          "_comment": "$..user",
+          "select": "$..[?(@.employment_status==='FREELANCER')]",
           "types": {
               "id": "id",
               "vorname": "first_name",
