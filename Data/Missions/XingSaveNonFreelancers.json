@@ -21,20 +21,22 @@
   },
   {
     "id": 1,
-    "name": "BlackHole",
+    "name": "XingRedis",
     "version": "1.0.0.0",
     "input": {
-      "something": {
+      "xingNonFreelancers": {
         "query": {
           "pluginId": 0,
           "packageName": "downloadInfo",
           "_comment": "$..user",
-          "select": "$..[?(@.employment_status==='FREELANCER')]",
+          "select": "$..*[?(@property === 'employment_status' && @ !== 'FREELANCER')]^",
           "types": {
               "id": "id",
-              "vorname": "first_name",
-              "nachname": "last_name",
-              "employmentStatus": "employment_status"
+              "gender": "gender",
+              "firstName": "first_name",
+              "lastName": "last_name",
+              "employmentStatus": "employment_status",
+              "url": "permalink"
           }
         }
       }

@@ -1,7 +1,7 @@
 {
-  "name": "Input2Output",
+  "name": "XingRedis",
   "version": "0.0.0",
-  "description": "This plugin does nothing! Input Packages equals ouptut packages.",
+  "description": "Saves all xing contacts in the redis database.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
