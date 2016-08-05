@@ -1,7 +1,7 @@
 {
-  "name": "XingRedis",
+  "name": "XingRedisDiff",
   "version": "0.0.0",
-  "description": "Saves all xing contacts in the redis database.",
+  "description": "Diff all xing contacts from yesterday and today.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

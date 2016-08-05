@@ -1,0 +1,11 @@
+{
+  "name": "XingRedisSave",
+  "version": "0.0.0",
+  "description": "Saves all xing contacts in the redis database.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mathias Mielitz",
+  "license": "BSD-2-Clause"
+}

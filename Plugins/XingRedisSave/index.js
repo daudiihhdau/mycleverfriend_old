@@ -30,11 +30,10 @@ module.exports.work = function(packages, callback) {
 
     var client = redis.createClient();
 
-    var dateObj = new Date();
-    dateObj.setDate(new Date().getDate() - 1);
+    var todayDateObj = new Date();
 
     var usersToday = _.map(packages.input['xingnonfreelancers'], function(userOn){ return userOn.id; });
-    usersToday.unshift(dateObj.toISOString().slice(0,10) + ':nonFreelancers'); // set redisKey as first item
+    usersToday.unshift(todayDateObj.toISOString().slice(0,10) + ':nonFreelancers'); // set redisKey as first item
 
 
     // open redis connection
@@ -46,6 +45,7 @@ module.exports.work = function(packages, callback) {
         });
 
         async.map(packages.input['xingnonfreelancers'], saveUserData, function(err, results) {
+            client.quit();
             return callback(err, packages);
         });
     });

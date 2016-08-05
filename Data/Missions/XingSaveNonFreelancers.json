@@ -21,7 +21,7 @@
   },
   {
     "id": 1,
-    "name": "XingRedis",
+    "name": "XingRedisSave",
     "version": "1.0.0.0",
     "input": {
       "xingNonFreelancers": {
